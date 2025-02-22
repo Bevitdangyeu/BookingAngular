@@ -1,0 +1,55 @@
+.nameImg{
+    display: flex;
+}
+.divImg{
+    margin: 20px;
+}
+.doctorImage{
+    height: 130px;
+    width: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 0px;
+}
+.thongtin{
+    margin: 20px;
+}
+.adress{
+   
+    display: flex;
+}
+.button{
+    border: 0px;
+    background-color: #344767;
+    padding: 5px 20px 5px 20px;
+    border-radius: 20px;
+    color: aliceblue;
+}
+.btnLichKham{
+    border-radius: 8px;
+     border: 0px; 
+     background-color: #d4e6f1;height: 
+     40px;width: 100px;
+     margin:10px;
+}
+.inputInfo{
+    border-radius: 20px;
+    border: 1px #A8A9AD solid;
+    width: 400px;
+    height: 45px; 
+    outline: none;
+    padding-left: 30px;
+    background-color: #f4f7f9;
+    margin-top: 10px;
+}
+.MotaBenh{
+    margin-top: 10px;
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px #A8A9AD solid;
+    outline: none;
+    width: 100%;
+}
+.description{
+    margin-top: 30px;
+}

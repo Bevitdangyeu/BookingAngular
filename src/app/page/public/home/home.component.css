@@ -1,0 +1,28 @@
+.img-container {
+  position: relative;
+  width: 80px;  /* Đặt kích thước cố định cho ảnh */
+  height: 80px; 
+  overflow: hidden; /* Tránh lỗi ảnh bị vỡ layout */
+}
+
+.img-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%; /* Đảm bảo ảnh luôn vừa với container */
+  height: 100%;
+  object-fit: contain; /* Giữ nguyên kích thước ảnh, không bị méo */
+  transition: opacity 0.3s ease-in-out;
+}
+
+.img-container img.deparment-icon-hover {
+  opacity: 0;
+}
+
+.icon-box:hover .img-container img.deparment-icon {
+  opacity: 0;
+}
+
+.icon-box:hover .img-container img.deparment-icon-hover {
+  opacity: 1;
+}

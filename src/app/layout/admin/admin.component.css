@@ -1,0 +1,13 @@
+.g-sidenav-show {
+    display: flex;  /* Kích hoạt flexbox */
+}
+
+.sidebar {
+    width: 280px;  /* Định kích thước sidebar */
+    flex-shrink: 0; /* Ngăn sidebar bị thu nhỏ */
+}
+
+.main-content {
+    flex-grow: 1; /* Cho phép content mở rộng ra phần còn lại */
+    padding: 20px; /* Tạo khoảng cách giữa nội dung và lề */
+}

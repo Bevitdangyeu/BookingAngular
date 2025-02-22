@@ -1,0 +1,17 @@
+.footer{
+    width: 100%;
+}
+.divInfo{
+    padding: 50px;
+    background-color: #344767;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+.info{
+    margin: 20px;
+}
+.banquyen{
+    justify-content: center;
+    text-align: center;
+}

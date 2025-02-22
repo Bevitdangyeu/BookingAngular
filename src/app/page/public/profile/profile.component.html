@@ -1,0 +1,210 @@
+<div class="container">
+  <div class="info">
+    <!-- phần info -->
+    <div class="nameImg">
+      <div class="divImg">
+        <img
+          src="https://img.freepik.com/free-photo/young-handsome-physician-medical-robe-with-stethoscope_1303-17818.jpg?t=st=1740236750~exp=1740240350~hmac=8bd7575c2856d706e1a823a822e6c372ff3a4835816d9b1ba7632a8ff5f854d9&w=1380"
+          class="doctorImage">
+      </div>
+      <div class="thongtin">
+        <p style="font-weight: bold;">Bác sĩ Chuyên khoa II Đỗ Thị Huệ</p>
+        <div>
+          <p>Hơn 30 năm kinh nghiệm trong lĩnh vực Sản - Phụ khoa</p>
+          <p>Nguyên Phó Trưởng khoa Khám bệnh -&nbsp; Bệnh viện Phụ sản Trung ương</p>
+          <p> Bác sĩ nhận khám từ 12 tuổi trở lên (Dưới 12 tuổi hỏi ý kiến bác sĩ)</p>
+        </div>
+        <div class="adress">
+          <div style="margin-right: 20px;">
+            <i style="color: cadetblue;" class="fa fa-map-marker" aria-hidden="true"></i> Đồng Tháp
+          </div>
+          <div>
+            <button class="button">
+              <i style="color: cornflowerblue;" class="fa fa-thumbs-up" aria-hidden="true"></i>
+              Like
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <hr>
+    <!-- phần lịch khám -->
+    <div>
+      <h4 class="mb-3"><i class="fa fa-globe mr-3 text-info"></i> LỊCH KHÁM BỆNH </h4>
+      <label style="padding-top: 30px;" for="dob">Chọn ngày:</label>
+      <select name="dates" id="datesSelect"
+        style="border-radius: 20px;padding: 6px; background-color: #7fb3d5;border: 0px;outline: none;margin-left: 10px;"
+        onchange="getDate(this)">
+        <option>Thứ 2,ngày 1/1/2025</option>
+        <option>Thứ 3,ngày 1/1/2025</option>
+        <option>Thứ 3,ngày 1/1/2025</option>
+        <!-- <option th:each="date : ${dates}" th:value="${date}" th:text="${date}"></option> -->
+      </select>
+      <div style="display: flex;max-width: 500px; flex-wrap: wrap;" id="lichKham">
+        <div th:each="item : ${user.lichKham}">
+          <button class="btnLichKham" type="button" onclick="chonDatLich(this)" data-bs-toggle="modal"
+            data-bs-target="#bookingModal" id="openModalDatLich">9:00-9:30</button>
+        </div>
+        <div th:each="item : ${user.lichKham}">
+          <button class="btnLichKham" type="button" onclick="chonDatLich(this)" data-bs-toggle="modal"
+            data-bs-target="#bookingModal" id="openModalDatLich">9:00-9:30</button>
+        </div>
+        <div th:each="item : ${user.lichKham}">
+          <button class="btnLichKham" type="button" onclick="chonDatLich(this)" data-bs-toggle="modal"
+            data-bs-target="#bookingModal" id="openModalDatLich">9:00-9:30</button>
+        </div>
+        <div class="modal-footer">
+          <p style="background-color: #4b7793; padding: 10px 20px 10px 20px;border-radius: 20px;color: white;">CHỌN
+            VÀO KHUNG GIỜ
+            ĐỂ ĐẶT LỊCH
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- PHẦN MÔ TẢ -->
+  <div class="description">
+    <div class="card mx-0 p-4 mb-5" style="border-color: #17a2b8; box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.21);">
+      <div class=" resume-content mr-auto">
+        <h4 class="mb-3"><i class="fa fa-globe mr-3 text-info"></i> GIỚI THIỆU </h4>
+        <div th:utext="${user.description}"></div>
+      </div>
+      <!-- <div class="resume-date text-md-right">
+                    <span class="text-primary">March 2019 - Present</span>
+                </div> -->
+    </div>
+  </div>
+
+
+  <!-- =================================================================== -->
+  <!-- ĐÁNH GIÁ CỦA KHÁCH HÀNG -->
+  <!-- =================================================================== -->
+  <div class="evaluate">
+    <h4 class="mb-3"><i class="fa fa-globe mr-3 text-info"></i> ĐÁNH GIÁ CỦA BỆNH NHÂN </h4>
+    <div class="heading-border-light"></div>
+    <!-- kiểm tra xem có bình luận không -->
+    <div th:if="${#lists.size(user.evaluate) == 0}">
+        <p style="font-size: 18px; font-weight: bold;">Chưa có đánh giá nào</p>
+            </div>
+            <div th:if="${#lists.size(user.evaluate) > 0}">
+            <div th:each=" evaluate: ${user.evaluate}">
+            <div style="display: flex;margin-bottom: 20px;">
+                <img src="/image/photo.png" style="width: 50px;height: 50px;border-radius: 50%;">
+                <div class="comment">
+                <!-- <p style="font-weight: bold;margin: 0px 0px 0px 10px;" th:text="${evaluate.fullName}"></p> -->
+                <div>
+                    <!-- tên -->
+                    <span th:text="${evaluate.fullName}" style="font-weight: bold;margin: 0px 0px 0px 10px;"></span>
+                    <!-- icon -->
+                    <i style="background-color:transparent;color: #a9cce3;" class="fa fa-check-circle" aria-hidden="true"></i>
+                    <span style="color: #b2babb;" th:text="${evaluate.ngayKham != null ? 'Đã khám vào ' + evaluate.ngayKham : 'Chưa có dữ liệu'}"></span>
+                </div>
+                <p style="margin: 0px 0px 0px 10px;" th:text="${evaluate.content}"></p>
+                <div style="display: flex;">
+                    <p style="margin-left: 10px;" th:text="${evaluate.date}"></p>
+                    <button
+                    style="border: 0px;height:10px;color: #6d6d6d;background-color: transparent;margin-left: 10px;"
+                    class="reply-button" onclick="showReplyBox(this)">Trả lời</button>
+                </div>
+                <div class="reply-box" style="display: none;">
+                    <textarea
+                    style="border-radius: 20px;width: 300px; height:40px;outline: none; border: 1px dashed ;padding-left: 20px;margin-left: 30px;"
+                    class="reply-text" placeholder="Nhập câu trả lời..."></textarea>
+                    <div style="margin-left: 30px;">
+                    <button
+                        style="border-radius: 8px; border: 0px; background-color: #d4e6f1;height: 35px;width: 50px;margin-top:10px;"
+                        class="send-reply">Gửi
+                    </button>
+                    <button onclick="showReplyBox(this)"
+                        style="border-radius: 8px; border: 0px; background-color: #d4e6f1;height: 35px;width: 50px;margin-top:10px;"
+                        class="send-reply">Hủy</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+<!-- MODAL ĐẶT LỊCH KHÁM BỆNH -->
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bookingModalLabel">BOOKING</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="row my-auto" style="width: 90%;margin-left: 50px;" id="contact">
+        <div class="col-md-8" style="width: 100%;">
+          <div class="contact-cont">
+            <!-- hiển thị thông tin bác sĩ và thông tin ngày khám -->
+            <h5>THÔNG TIN ĐẶT LỊCH</h5>
+            <div id="infoDatLich">
+
+            </div>
+            <h5>THÔNG TIN BỆNH NHÂN</h5>
+            <div class="heading-border-light"></div>
+          </div>
+          <div class="row con-form" id="ttBenhNhan" style="width: 100%;">
+            <div class="col-md-12">
+              <input class="inputInfo" type="text" name="full-name" id="fullName" placeholder="Full Name(Bắt buộc)">
+            </div>
+            <div class="col-md-12">
+              <input class="inputInfo" type="text" name="phone-number" id="phoneNumber"
+                placeholder="Phone Number(Bắt buộc)">
+            </div>
+            <div class="col-md-12">
+              <input class="inputInfo" type="text" name="email" id="email" placeholder="Email Id">
+            </div>
+            <div class="col-md-12">
+              <input class="inputInfo" type="text" name="subject" id="diaChi" placeholder="Địa chỉ">
+            </div>
+            <div class="col-md-12">
+              <label style="padding-top: 30px;" for="dob">Ngày tháng năm sinh:</label>
+              <input class="inputInfo"
+                style="border-radius: 20px;width: 400px;height: 45px; outline: none;padding-left: 30px;background-color: #f4f7f9;display: block;"
+                type="date" id="dob" name="dateOfBirth" placeholder="Ngày/tháng/năm sinh">
+            </div>
+            <div class="col-md-12">
+              <textarea class="MotaBenh" id="moTa" placeholder="Mô tả triệu chứng"></textarea></div>
+            <div style="width:100px;margin:10px 0px 10px 0px">
+              <label for="fileInput" style="
+                              display: inline-flex;
+                              align-items: center;
+                              gap: 8px;
+                              padding: 10px 15px;
+                              border: 1px solid #ccc;
+                              border-radius: 8px;
+                              cursor: pointer;
+                              font-size: 16px;
+                              color: #555;
+                              background-color: #f9f9f9;
+                              transition: background-color 0.3s, border-color 0.3s;">
+
+                <img src="/image/photo.png" alt="icon" style="width: 24px; height: 24px; margin-right: 8px;">
+                Ảnh/video
+              </label>
+              <img style="width: 60px;" id="imagePreview">
+              <input style="display: none;" type="file" id="fileInput" onchange="previewImage()">
+            </div>
+            <div class="col-md-12 sub-but">
+              <button
+                style="width:120px;height: 40px; border-radius: 20px;background-color: #a9cce3;outline: none;border: 0px;"
+                type="button" onclick="DatLichClick(this)">ĐẶT LỊCH
+              </button>
+            </div>
+            <p style="margin-top: 10px;color: #e59866;">LƯU Ý</p>
+            <p style="color: #edbb99;">Thông tin anh/chị cung cấp sẽ được sử dụng làm hồ sơ khám bệnh, khi
+              điền thông tin
+              anh/chị vui lòng:</p>
+            <p style="color: #edbb99;">Ghi rõ họ và tên, viết hoa những chữ cái đầu tiên, ví dụ: Đặng Thị
+              Xuân Mai </p>
+            <p style="color: #edbb99;"> Điền đầy đủ, đúng và vui lòng kiểm tra lại thông tin trước khi ấn
+              "ĐẶT LỊCH".</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
