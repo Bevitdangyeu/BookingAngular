@@ -4,14 +4,14 @@ import { UserComponent } from './layout/user/user.component';
 import { NgModule } from '@angular/core';
 import { HomeComponent } from './page/public/home/home.component';
 import { AdminHomeComponent } from './page/admin/admin-home/admin-home.component';
+import { LoginComponent } from './auth/login/login.component';
 import { ProfileComponent } from './page/public/profile/profile.component';
 export const routes: Routes = [
     {
-        path: '', // 👈 Đây là trang mặc định khi vào "/"
+        path: 'public',
         component: UserComponent,
         children: [
-            { path: '', component: HomeComponent }, // 👈 Đảm bảo có trang mặc định cho user
-            { path: 'profile', component: ProfileComponent }
+            { path: 'HomePage', component: HomeComponent }
         ]
     },
     {
@@ -22,8 +22,8 @@ export const routes: Routes = [
         ]
     },
     {
-        path: 'public',
-        component: UserComponent,
+        path: 'login',
+        component: LoginComponent,
         children: [
 
         ]

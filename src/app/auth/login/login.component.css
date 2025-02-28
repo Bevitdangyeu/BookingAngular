@@ -1,0 +1,52 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9; /* Màu nền nhạt */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Chiều cao toàn màn hình */
+    margin: 0;
+}
+.container{
+    width: 750px;
+    height: 450px;
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    box-shadow: 10px 10px 5px rgb(211, 210, 210);
+    border-radius: 20px;
+    /* border: 1px black dashed;  */
+}
+.img{
+    width: 50%;
+}
+.doctorimg{
+    width:375px;
+    height: 450px;
+    border-radius: 20px 0px 0px 20px;
+    object-fit: cover;
+}
+.login{
+    width:50%;
+    justify-content: center;
+    text-align: center;
+    background-color:#eaecee;
+    border-radius: 0px 20px 20px 0px;
+}
+.input{
+    width: 300px;
+    height: 40px;
+    border-radius:20px;
+    padding-left: 10px;
+    margin-top: 20px;
+    outline: none;
+    border: 1px dashed #abb2b9;
+}
+.button{
+    width: 80px;
+    height: 40px;
+    border-radius: 20px;
+    border: 0px;
+    margin-top: 30px;
+    background-color: #98b4bf;
+}
