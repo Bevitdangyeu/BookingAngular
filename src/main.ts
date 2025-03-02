@@ -3,12 +3,13 @@ import { appConfig } from './app/app.config';
 import { provideRouter } from '@angular/router';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { AdminComponent } from './app/layout/admin/admin.component';
-import { authInterceptor } from './app/interceptors/auth.interceptors/auth.interceptors.component';
+import { AuthInterceptor } from './app/interceptors/auth.interceptors/auth.interceptors';
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
-    provideHttpClient(withInterceptors([authInterceptor]))
+    provideHttpClient(withInterceptorsFromDi()), // Dùng Dependency Injection cho Interceptor
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true } // Đăng ký Interceptor
   ]
 }).catch(err => console.error(err));

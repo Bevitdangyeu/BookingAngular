@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthServiceComponent } from '../../core/services/auth-service/auth-service.component';
+import { AuthServiceComponent } from '../../core/services/auth-service.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthenticationResponse } from '../../models/authentication-response.model';
@@ -31,7 +31,6 @@ export class LoginComponent {
           // Lưu token vào localStorage (nếu cần)
           localStorage.setItem('accessToken', response.accessToken);
           localStorage.setItem('refreshToken', response.refreshToken);
-          localStorage.setItem('role', response.role);
           // Chuyển hướng dựa trên vai trò (nếu cần)
           if (response.role === 'ADMIN') {
             // Chuyển hướng admin

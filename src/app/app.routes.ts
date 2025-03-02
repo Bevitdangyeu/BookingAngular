@@ -6,26 +6,28 @@ import { HomeComponent } from './page/public/home/home.component';
 import { AdminHomeComponent } from './page/admin/admin-home/admin-home.component';
 import { LoginComponent } from './auth/login/login.component';
 import { ProfileComponent } from './page/public/profile/profile.component';
+import { AuthGuard } from './auth/auth.guard';
 export const routes: Routes = [
     {
         path: 'public',
         component: UserComponent,
+
         children: [
             { path: 'HomePage', component: HomeComponent }
-        ]
+        ],
     },
     {
         path: 'admin', // url với đường dẫn admin sẽ áp dụng layout admin
         component: AdminComponent,
         children: [
             { path: 'home', component: AdminHomeComponent }
-        ]
+        ],
+        canActivate: [AuthGuard], data: { expectedRole: ['ADMIN'] }
     },
     {
         path: 'login',
         component: LoginComponent,
         children: [
-
         ]
     }
 ];
