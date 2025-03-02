@@ -35,7 +35,7 @@ export class AuthInterceptor implements HttpInterceptor {
           Swal.fire({
             title: 'Phiên đăng nhập hết hạn!',
             text: 'Vui lòng đăng nhập lại.',
-            icon: 'error',
+            icon: 'warning',
             confirmButtonText: 'OK',
             timer: 3000,
             timerProgressBar: true,
@@ -43,7 +43,6 @@ export class AuthInterceptor implements HttpInterceptor {
               popup: 'custom-popup',
             }
           });
-          console.warn("Token hết hạn hoặc không hợp lệ, đăng xuất...");
           this.authService.logout(); // Gọi hàm logout khi gặp lỗi 401
         } else if (error.status === 403) {
           return this.handle403Response(authReq, next);

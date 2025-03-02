@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+.swal2-popup.custom-popup-logout {
+    background-color: #e9f3f9 !important;
+    border-radius: 40px !important;
+    height: 400px !important;
+}
+
+.swal2-title.custom-title-logout {  
+    color: darkcyan !important;
+}

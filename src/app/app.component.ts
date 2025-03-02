@@ -17,10 +17,6 @@ export class AppComponent implements OnInit {
   }
   constructor(private http: HttpClient) { { } };
   onload() {
-    this.http.get<any>('http://localhost:8080/public/doctor/list').subscribe(
-      Response => {
-        console.log("dữ liệu: " + Response[0].fullName);
-      }
-    )
+
   }
 }

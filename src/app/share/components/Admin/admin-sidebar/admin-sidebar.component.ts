@@ -16,10 +16,11 @@ export class AdminSidebarComponent {
       text: 'Bạn đã được đăng xuất khỏi hệ thống.',
       icon: 'success',
       confirmButtonText: 'OK',
-      timer: 3000,
+      timer: 30000,
       timerProgressBar: true,
       customClass: {
-        popup: 'custom-popup',
+        popup: 'custom-popup-logout',
+        title: 'custom-title-logout'
       }
     });
   }
