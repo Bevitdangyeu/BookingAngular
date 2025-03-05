@@ -11,7 +11,11 @@ export class DoctorService {
     private apiUrl = 'http://localhost:8080/public/doctor/';
     constructor(private http: HttpClient) { }
     // viết hàm lấy danh sách doctor
-    getDoctor(): Observable<DoctorModel[]> {
+    getDoctors(): Observable<DoctorModel[]> {
         return this.http.get<DoctorModel[]>(this.apiUrl + "list")
+    }
+    // viết hàm lấy thông tin chi tiết của một bác sĩ
+    getDoctorDetails(id: number): Observable<DoctorModel> {
+        return this.http.get<DoctorModel>(this.apiUrl + "profile/" + `${id}`)
     }
 }

@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';  // dùng routerLink
 import { DoctorModel } from '../../../models/doctor.model';
 import { DoctorService } from '../../../services/doctor.service';
 import { NgModule } from '@angular/core';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-home',
   imports: [CommonModule, RouterModule],
@@ -14,14 +15,14 @@ export class HomeComponent implements OnInit {
   //khởi tạo biến để lưu danh sách bác sĩ
   doctors: DoctorModel[] = [];
   groupedDoctors: DoctorModel[][] = []; // Nhóm các bác sĩ thành nhóm 3 người
-  constructor(private doctorService: DoctorService) { }
+  constructor(private doctorService: DoctorService, private router: Router) { }
   // tạo hàm khơi tạo ( tức là render ngay khi trang được load)
   ngOnInit(): void {
     this.loadDoctors();
   }
   // hàm lấy danh sách doctor
   loadDoctors(): void {
-    this.doctorService.getDoctor().subscribe({
+    this.doctorService.getDoctors().subscribe({
       next: (data) => {
         this.doctors = data;
         this.groupDoctors();
@@ -42,5 +43,8 @@ export class HomeComponent implements OnInit {
     for (let i = 0; i < this.doctors.length; i += 3) {
       this.groupedDoctors.push(this.doctors.slice(i, i + 3));
     }
+  }
+  viewProfile(id: number) {
+    this.router.navigate(['/public/profile', id]); // Chuyển hướng đến trang Profile
   }
 }

@@ -8,7 +8,7 @@
           class="doctorImage">
       </div>
       <div class="thongtin">
-        <p style="font-weight: bold;">Bác sĩ Chuyên khoa II Đỗ Thị Huệ</p>
+        <p style="font-weight: bold;">Bác sĩ Chuyên khoa II <span>{{doctor.userDTO.fullName}}</span></p>
         <div>
           <p>Hơn 30 năm kinh nghiệm trong lĩnh vực Sản - Phụ khoa</p>
           <p>Nguyên Phó Trưởng khoa Khám bệnh -&nbsp; Bệnh viện Phụ sản Trung ương</p>
@@ -16,7 +16,8 @@
         </div>
         <div class="adress">
           <div style="margin-right: 20px;">
-            <i style="color: cadetblue;" class="fa fa-map-marker" aria-hidden="true"></i> Đồng Tháp
+            <i style="color: cadetblue;" class="fa fa-map-marker"
+              aria-hidden="true"></i><span>{{doctor.userDTO.address}}</span>
           </div>
           <div>
             <button class="button">
@@ -35,11 +36,8 @@
       <label style="padding-top: 30px;" for="dob">Chọn ngày:</label>
       <select name="dates" id="datesSelect"
         style="border-radius: 20px;padding: 6px; background-color: #7fb3d5;border: 0px;outline: none;margin-left: 10px;"
-        onchange="getDate(this)">
-        <option>Thứ 2,ngày 1/1/2025</option>
-        <option>Thứ 3,ngày 1/1/2025</option>
-        <option>Thứ 3,ngày 1/1/2025</option>
-        <!-- <option th:each="date : ${dates}" th:value="${date}" th:text="${date}"></option> -->
+        (change)="getDate($event)">
+        <option *ngFor="let date of dates" [value]="date">{{ date }}</option>
       </select>
       <div style="display: flex;max-width: 500px; flex-wrap: wrap;" id="lichKham">
         <div th:each="item : ${user.lichKham}">

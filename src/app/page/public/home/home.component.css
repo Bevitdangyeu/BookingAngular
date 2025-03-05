@@ -26,3 +26,39 @@
 .icon-box:hover .img-container img.deparment-icon-hover {
   opacity: 1;
 }
+/* Định dạng nút chuyển slide */
+.buttonCarousel {
+  position: absolute;
+  position: -80px !important;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px; /* Điều chỉnh kích thước nút */
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Nút Previous bên trái */
+.carousel-control-prev {
+  left: -60px; /* Đẩy ra khỏi item */
+}
+
+/* Nút Next bên phải */
+.carousel-control-next {
+  right: -60px;
+}
+
+/* Định dạng biểu tượng mũi tên */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  width: 30px;
+  height: 30px;
+}
+.imageDoctor{
+  width:250px;
+  height:250px;
+  border-radius: 20px; 
+  object-fit: cover;
+}

@@ -10,6 +10,6 @@ bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()), // Dùng Dependency Injection cho Interceptor
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true } // Đăng ký Interceptor
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true } // Đăng ký Interceptor. Thêm token vào header, tự động gửi yêu cầu refresh token
   ]
 }).catch(err => console.error(err));
