@@ -32,7 +32,7 @@
     <hr>
     <!-- phần lịch khám -->
     <div>
-      <h4 class="mb-3"><i class="fa fa-globe mr-3 text-info"></i> LỊCH KHÁM BỆNH </h4>
+      <h4 class="mb-3"><i style="color: #7195ac;" class="fa fa-calendar" aria-hidden="true"></i> LỊCH KHÁM BỆNH </h4>
       <label style="padding-top: 30px;" for="dob">Chọn ngày:</label>
       <select name="dates" id="datesSelect"
         style="border-radius: 20px;padding: 6px; background-color: #7fb3d5;border: 0px;outline: none;margin-left: 10px;"
@@ -40,17 +40,11 @@
         <option *ngFor="let date of dates" [value]="date">{{ date }}</option>
       </select>
       <div style="display: flex;max-width: 500px; flex-wrap: wrap;" id="lichKham">
-        <div th:each="item : ${user.lichKham}">
-          <button class="btnLichKham" type="button" onclick="chonDatLich(this)" data-bs-toggle="modal"
-            data-bs-target="#bookingModal" id="openModalDatLich">9:00-9:30</button>
-        </div>
-        <div th:each="item : ${user.lichKham}">
-          <button class="btnLichKham" type="button" onclick="chonDatLich(this)" data-bs-toggle="modal"
-            data-bs-target="#bookingModal" id="openModalDatLich">9:00-9:30</button>
-        </div>
-        <div th:each="item : ${user.lichKham}">
-          <button class="btnLichKham" type="button" onclick="chonDatLich(this)" data-bs-toggle="modal"
-            data-bs-target="#bookingModal" id="openModalDatLich">9:00-9:30</button>
+        <div *ngFor="let time of times">
+          <button class="btnLichKham" (click)="chonDatLich(time)" value="{{time.timeId}}" type="button"
+            data-bs-toggle="modal" data-bs-target="#bookingModal">
+            {{ time.time }}
+          </button>
         </div>
         <div class="modal-footer">
           <p style="background-color: #4b7793; padding: 10px 20px 10px 20px;border-radius: 20px;color: white;">CHỌN
@@ -79,7 +73,8 @@
   <!-- ĐÁNH GIÁ CỦA KHÁCH HÀNG -->
   <!-- =================================================================== -->
   <div class="evaluate">
-    <h4 class="mb-3"><i class="fa fa-globe mr-3 text-info"></i> ĐÁNH GIÁ CỦA BỆNH NHÂN </h4>
+    <h4 class="mb-3"><i style="color: #7195ac;" class="fa fa-commenting" aria-hidden="true"></i> ĐÁNH GIÁ CỦA BỆNH NHÂN
+    </h4>
     <div class="heading-border-light"></div>
     <!-- kiểm tra xem có bình luận không -->
     <div th:if="${#lists.size(user.evaluate) == 0}">
@@ -139,7 +134,9 @@
             <!-- hiển thị thông tin bác sĩ và thông tin ngày khám -->
             <h5>THÔNG TIN ĐẶT LỊCH</h5>
             <div id="infoDatLich">
-
+              <p>Bác sĩ: <span class="infoDoctor">{{doctor.userDTO.fullName}}</span></p>
+              <p>Thời gian: <button id="Thoigiankham" class="btnLichKham p-2" value="{{timeId}}">{{thoigiankham}}</button></p>
+              <p>Địa chỉ: <span class="btnLichKham p-2">{{doctor.userDTO.address}}</span></p>
             </div>
             <h5>THÔNG TIN BỆNH NHÂN</h5>
             <div class="heading-border-light"></div>
@@ -153,10 +150,10 @@
                 placeholder="Phone Number(Bắt buộc)">
             </div>
             <div class="col-md-12">
-              <input class="inputInfo" type="text" name="email" id="email" placeholder="Email Id">
+              <input class="inputInfo" type="text" name="email" id="email" placeholder="Email">
             </div>
             <div class="col-md-12">
-              <input class="inputInfo" type="text" name="subject" id="diaChi" placeholder="Địa chỉ">
+              <input class="inputInfo" type="text" name="subject" id="addressBN" placeholder="Địa chỉ">
             </div>
             <div class="col-md-12">
               <label style="padding-top: 30px;" for="dob">Ngày tháng năm sinh:</label>
@@ -183,13 +180,15 @@
                 <img src="/image/photo.png" alt="icon" style="width: 24px; height: 24px; margin-right: 8px;">
                 Ảnh/video
               </label>
-              <img style="width: 60px;" id="imagePreview">
-              <input style="display: none;" type="file" id="fileInput" onchange="previewImage()">
+              <div *ngIf="imageUrl">
+                <img [src]="imageUrl" style="width: 60px;" id="imagePreview">
+              </div>
+              <input style="display: none;" type="file" id="fileInput" (change)="previewImage($event)">
             </div>
             <div class="col-md-12 sub-but">
               <button
                 style="width:120px;height: 40px; border-radius: 20px;background-color: #a9cce3;outline: none;border: 0px;"
-                type="button" onclick="DatLichClick(this)">ĐẶT LỊCH
+                type="button"  (click)="bookingClick()">ĐẶT LỊCH
               </button>
             </div>
             <p style="margin-top: 10px;color: #e59866;">LƯU Ý</p>
