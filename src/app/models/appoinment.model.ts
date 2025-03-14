@@ -12,6 +12,7 @@ export interface appointmentModel {
     image: String;
     dateOfBirth: String;
     createAt?: Date;
+    date: Date,
     time: timeModel;
     doctor: DoctorModel;
 }

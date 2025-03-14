@@ -27,6 +27,7 @@ export class ProfileComponent {
   doctor: DoctorModel = {} as DoctorModel;
   dates: string[] = [];
   status: String = "";
+  selectDate: Date = new Date();
   constructor(private route: ActivatedRoute,
     private doctorService: DoctorService,
     private timeService: TimeService,
@@ -88,6 +89,8 @@ export class ProfileComponent {
     this.times = [];
     const id = Number(this.route.snapshot.paramMap.get('id'));
     const selectedDate = (event.target as HTMLSelectElement).value;
+    const selectedDateString = (selectedDate);
+    this.selectDate = new Date(selectedDateString);
     // gọi api lấy danh sách
     this.timeService.getTimeByIdAndTime(id, selectedDate).subscribe({
       next: (data) => {
@@ -136,7 +139,8 @@ export class ProfileComponent {
       description: (document.getElementById("moTa") as HTMLTextAreaElement).value,
       sex: (1),
       image: this.uploadFile(),
-      doctor: this.doctor
+      doctor: this.doctor,
+      date: this.selectDate
 
     }
     // gọi đến service upload
@@ -162,7 +166,7 @@ export class ProfileComponent {
     formData.append("file", selectedFile);
     this.uploadService.uploadFile(formData).subscribe({
       next: (response) => {
-        console.log("Upload thành công:", response);
+        console.log("Upload thành công:", response.fileName);
         return response.fileName;
       },
       error: (error) => {
