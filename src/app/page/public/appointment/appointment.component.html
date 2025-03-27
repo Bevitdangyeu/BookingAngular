@@ -1,0 +1,191 @@
+<div class="container mt-3" style="min-width: 700px;">
+  <div style="flex: 1;">
+    <!-- Tabs -->
+    <ul class="nav nav-tabs" id="patientTabs">
+      <li class="nav-item" style="cursor: pointer;">
+        <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#Receive">CHỜ XÁC NHẬN</a>
+      </li>
+      <li class="nav-item" style="cursor: pointer;">
+        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#confirmed">ĐÃ DUYỆT</a>
+      </li>
+      <li class="nav-item" style="cursor: pointer;">
+        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#completed">ĐÃ HOÀN THÀNH</a>
+      </li>
+      <li class="nav-item" style="cursor: pointer;">
+        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#cancel">ĐÃ HỦY</a>
+      </li>
+    </ul>
+
+    <!-- <div style="display: block; margin: 20px 0px 0px 20px;">
+      <label for="">TIME</label>
+      <div style="display: flex;">
+        <input type="date" placeholder="Chọn ngày" style="
+              border-radius: 20px;
+              width: 200px;
+              height: 45px;
+              outline: none;
+              padding: 0px 20px 0px 30px;
+              background-color: #f4f7f9;
+              display: block;
+              border: 1px #a9cce3 solid;
+            " />
+        <button style="
+              border-radius: 20px;
+              height: 40px;
+              width: 80px;
+              margin-left: 20px;
+              background-color: #1f618d;
+              color: white;
+              border: 0px;
+            ">
+          Search
+        </button>
+      </div>
+    </div> -->
+
+    <!-- Tab Content -->
+
+    <div class="tab-content mt-3 rounded-2" style="width: 100%;">
+      <!-- Tab Chờ Xác Nhận -->
+      <div class="tab-pane fade show active" style="justify-content: center; text-align: center;" id="Receive">
+        <table class="table table-bordered text-center" style="width: 90%;">
+          <thead class="table-light">
+            <tr>
+              <th>ID - Name</th>
+              <th>Phone number</th>
+              <th>Time</th>
+              <th>Doctor</th>
+              <th>Detail</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let lichKham of   appointments
+">
+            <tr *ngIf="lichKham.status=='Pending approval'">
+              <td>{{ lichKham.fullName }}</td>
+              <td>{{ lichKham.phoneNumber}}</td>
+              <td>{{ lichKham.description }}</td>
+              <td>24/11/2020, 20:59 PM</td>
+              <td><button class="btn btn-primary">Detail</button></td>
+              <td>
+                <!-- (click)="updateStatus(lichKham.datLichId, 'Hủy')" -->
+                <button class="btn btn-danger">Cancel</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Tab Đã Duyệt -->
+      <div class="tab-pane fade" id="confirmed" style="justify-content: center; text-align: center;">
+        <table class="table table-bordered text-center" style="width: 90%;">
+          <thead class="table-light">
+            <tr>
+              <th>ID - Name</th>
+              <th>Phone number</th>
+              <th>Time</th>
+              <th>Update</th>
+              <th>Detail</th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let lichKham of   appointments
+">
+            <tr *ngIf="lichKham.status=='Confiemed'">
+              <td>{{ lichKham.fullName }}</td>
+              <td>{{ lichKham.phoneNumber }}</td>
+              <td>{{ lichKham.description }}</td>
+              <td>24/11/2020, 20:59 PM</td>
+              <td><button class="btn btn-primary">Detail</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Tab Đã Hoàn Thành -->
+      <div class="tab-pane fade" id="completed" style="justify-content: center; text-align: center;">
+        <table class="table table-bordered text-center" style="width: 90%;">
+          <thead class="table-light">
+            <tr>
+              <th>ID - Name</th>
+              <th>Phone number</th>
+              <th>Time</th>
+              <th>Update</th>
+              <th>Detail</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let lichKham of   appointments
+">
+            <tr *ngIf="lichKham.status=='Done'">
+              <td>{{ lichKham.appointmentId }}</td>
+              <td>{{ lichKham.phoneNumber }}</td>
+              <td>{{ lichKham.description }}</td>
+              <td>24/11/2020, 20:59 PM</td>
+              <td><button class="btn btn-primary">Detail</button></td>
+              <td *ngIf="lichKham">
+                <button
+                  (click)="review(lichKham.appointmentId,lichKham.doctor.userDTO.fullName,lichKham.doctor.idDoctor)"
+                  data-bs-toggle="modal" data-bs-target="#reviewDoctorModal"
+                  [ngClass]="lichKham?.reviewed ? 'btn btn-light' : 'btn btn-success'" [disabled]="lichKham?.reviewed">
+                  {{ lichKham?.reviewed ? 'Đã Review' : 'Reviews' }}
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Tab Đã Hủy -->
+      <div class="tab-pane fade" id="cancel" style="justify-content: center; text-align: center;">
+        <p>Đã hủy</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="reviewDoctorModal" tabindex="-1" aria-labelledby="reviewDoctorLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reviewDoctorLabel">Đánh giá bác sĩ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="reviewForm">
+          <div class="mb-3">
+            <label class="form-label">Id lịch khám:</label>
+            <input type="text" class="form-control" id="idLichKham" value={{idAppointment}} readonly>
+          </div>
+          <!-- Tên bác sĩ -->
+          <div class="mb-3">
+            <label class="form-label">Bác sĩ:</label>
+            <input type="text" class="form-control" id="doctorName" value={{doctor}} readonly>
+          </div>
+
+          <!-- Đánh giá bằng sao -->
+          <div class="mb-3">
+            <label class="form-label">Đánh giá:</label>
+            <div class="star-rating">
+              <i class="fa fa-star" style="color: darkgoldenrod;" data-value="1"></i>
+              <i class="fa fa-star" style="color: darkgoldenrod;" data-value="2"></i>
+              <i class="fa fa-star" style="color: darkgoldenrod;" data-value="3"></i>
+              <i class="fa fa-star" style="color: darkgoldenrod;" data-value="4"></i>
+              <i class="fa fa-star" style="color: darkgoldenrod;" data-value="5"></i>
+            </div>
+            <input type="hidden" id="ratingValue" name="rating" value="0">
+          </div>
+
+          <!-- Bình luận -->
+          <div class="mb-3">
+            <label class="form-label">Nhận xét:</label>
+            <textarea class="form-control" id="reviewText" rows="3" placeholder="Viết nhận xét của bạn..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" (click)="addReviews()" class="btn btn-primary" id="submitReview">Gửi đánh giá</button>
+      </div>
+    </div>
+  </div>
+</div>

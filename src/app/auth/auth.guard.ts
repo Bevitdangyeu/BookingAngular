@@ -6,7 +6,7 @@ import { Observer } from "rxjs";
 @Injectable({
     providedIn: 'root'
 })
-
+// class này cấu hình ngăn chặn truy cập vào các url k được phép( nếu k có roke thì k vào đc giao diện đó)
 export class AuthGuard implements CanActivate {
     constructor(private authService: AuthServiceComponent, private router: Router) { }
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): MaybeAsync<GuardResult> {

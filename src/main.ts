@@ -6,6 +6,7 @@ import { AppComponent } from './app/app.component';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { AdminComponent } from './app/layout/admin/admin.component';
 import { AuthInterceptor } from './app/interceptors/auth.interceptors/auth.interceptors';
+(window as any).global = window;
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),

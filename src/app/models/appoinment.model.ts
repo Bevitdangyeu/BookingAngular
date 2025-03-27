@@ -1,9 +1,9 @@
 import { timeModel } from "./time.model";
 import { DoctorModel } from "./doctor.model";
 export interface appointmentModel {
-    appoinmentId?: Number;
+    appointmentId?: number;
     fullName: String;
-    sex: Number;
+    sex: number;
     phoneNumber: String;
     address: String;
     gmail: String;
@@ -15,4 +15,5 @@ export interface appointmentModel {
     date: Date,
     time: timeModel;
     doctor: DoctorModel;
+    reviewed: boolean
 }

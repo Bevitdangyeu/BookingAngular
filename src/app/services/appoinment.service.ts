@@ -10,8 +10,12 @@ import { Observable } from "rxjs";
 
 export class appointmentService {
     constructor(private http: HttpClient) { }
-    apiUrl = "http://localhost:8080/public/appoientment/add";
+    apiUrl = "http://localhost:8080/public/appointment/add";
+    apiUrlGetAll = "http://localhost:8080/user/appointment/list"
     addApponintment(appoientment: appointmentModel): Observable<{ message: string; status: string }> {
         return this.http.post<{ message: string; status: string }>(this.apiUrl, appoientment);
+    }
+    findAllAppointmentPublic(): Observable<appointmentModel[]> {
+        return this.http.get<appointmentModel[]>(this.apiUrlGetAll);
     }
 }

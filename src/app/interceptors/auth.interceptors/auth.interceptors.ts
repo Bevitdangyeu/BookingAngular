@@ -14,11 +14,10 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthServiceComponent) {
     console.log("interceptor đã được khởi tạo")
   }
-
+  // tự động gửi kèm token trong mỗi request
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = localStorage.getItem('accessToken');
     const refreshToken = localStorage.getItem('refreshToken');
-
     let authReq = req;
     if (token) {
       authReq = req.clone({
@@ -27,6 +26,8 @@ export class AuthInterceptor implements HttpInterceptor {
           'Authorization-Refresh': refreshToken || ''
         }
       });
+      console.log("đã set token: " + token)
+      console.log("đã set refresh: " + refreshToken)
     }
 
     return next.handle(authReq).pipe(
