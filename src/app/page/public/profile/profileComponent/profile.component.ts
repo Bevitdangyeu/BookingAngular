@@ -53,10 +53,6 @@ export class ProfileComponent {
     this.loadDetailDoctor();
     this.generateNext7Days();
     // this.loadReviews();
-
-    // đăng kí webbsocket với trả lời review
-    // this.socket.subscribeRepliesToDoctor(this.doctor.idDoctor);
-    // đăng kí websocket để nhận review mới và thêm review đó vào danh sách reviews
     this.socket.subscribeReviewsToDoctor(this.doctor.idDoctor);
     //
     this.socket.getReplies().subscribe(newReplies => {
@@ -86,7 +82,7 @@ export class ProfileComponent {
         this.doctor = data;
         console.log(data);
         this.loadReviews()
-        // 🟢 Gọi WebSocket ở đây vì doctor đã có dữ liệu
+        // Gọi WebSocket ở đây vì doctor đã có dữ liệu
         this.socket.subscribeReviewsToDoctor(this.doctor.idDoctor);
         // Lắng nghe sự kiện cập nhật review
         this.socket.getReview().subscribe(newReview => {

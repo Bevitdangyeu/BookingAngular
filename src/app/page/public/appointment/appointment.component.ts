@@ -46,26 +46,45 @@ export class AppointmentComponent {
       doctor: { idDoctor: this.idDoctor } as Partial<DoctorModel>,
       appointment: { appointmentId: this.idAppointment },
       start: 5,
-      user: { idUser: 1 }
+      // user: { idUser: 1 }
     }
     // gọi service thêm đánh giá
-    this.reviewsService.add(review);
-    this.reviewsService.getNewReviews().subscribe({
-      next: (data) => {
-        this.appointments = this.appointments.map(a =>
-          a.appointmentId === this.idAppointment ? { ...a, reviewed: true } : a
-        );
-        let bookingModal = document.getElementById("reviewDoctorModal");
-        if (bookingModal) {
-          let modalInstance = bootstrap.Modal.getInstance(bookingModal);
-          if (modalInstance) {
-            modalInstance.hide();
+    this.reviewsService.add(review).subscribe({
+      next: (response) => {
+        if (response.Message === "Đánh giá đã được gửi") {
+          console.log("data: " + response)
+          this.appointments = this.appointments.map(a =>
+            a.appointmentId === this.idAppointment ? { ...a, reviewed: true } : a
+          );
+          let bookingModal = document.getElementById("reviewDoctorModal");
+          if (bookingModal) {
+            let modalInstance = bootstrap.Modal.getInstance(bookingModal);
+            if (modalInstance) {
+              modalInstance.hide();
+            }
           }
+          Swal.fire({
+            title: 'Successfully reviewed!',
+            text: 'Cảm ơn bạn đã gửi đánh giá!',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            timer: 3000,
+            timerProgressBar: true,
+            customClass: {
+              popup: 'custom-popup-logout',
+              title: 'custom-title-logout'
+            }
+          });
+          // Xóa backdrop khỏi DOM
+          document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+            backdrop.remove();
+          });
         }
+      }, error: (error) => {
         Swal.fire({
-          title: 'Successfully reviewed!',
-          text: 'Cảm ơn bạn đã gửi đánh giá!',
-          icon: 'success',
+          title: 'Fail reviewed!',
+          text: 'Gửi đánh giá thất bại vui lòng thử lại!',
+          icon: 'error',
           confirmButtonText: 'OK',
           timer: 3000,
           timerProgressBar: true,
@@ -73,14 +92,14 @@ export class AppointmentComponent {
             popup: 'custom-popup-logout',
             title: 'custom-title-logout'
           }
-        });
+        })
         // Xóa backdrop khỏi DOM
         document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
           backdrop.remove();
         });
-      },
-      error: (error) =>
-        console.log(error)
-    })
+      }
+
+    });
+
   }
 }

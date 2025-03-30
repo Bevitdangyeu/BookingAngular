@@ -10,12 +10,10 @@ import { WebSocketService } from "./websocket.service";
 export class reviewsSevice {
     constructor(private http: HttpClient, private websocketService: WebSocketService) { }
     apiUrl = "http://localhost:8080/";
-    add(review: reviewModel) {
+
+    add(review: reviewModel): Observable<any> {
         console.log("vào service để thêm đánh giá")
-        this.websocketService.sendReview(review);
-    }
-    getNewReviews(): Observable<reviewModel> {
-        return this.websocketService.getReviewUpdates();
+        return this.websocketService.sendReview(review);
     }
     findByDoctor(id: number): Observable<reviewModel[]> {
         console.log('id ' + id);
