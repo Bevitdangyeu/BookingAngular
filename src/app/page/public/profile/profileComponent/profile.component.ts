@@ -46,33 +46,25 @@ export class ProfileComponent {
     private reviewService: reviewsSevice,
     private cdr: ChangeDetectorRef,
     private socket: WebSocketService,
-    private router: Router) {
+    private router: Router
+  ) {
     registerLocaleData(localeVi);
   }
   ngOnInit(): void {
     this.loadDetailDoctor();
     this.generateNext7Days();
-    // this.loadReviews();
-    this.socket.subscribeReviewsToDoctor(this.doctor.idDoctor);
-    //
-    this.socket.getReplies().subscribe(newReplies => {
-      newReplies.forEach(reply => {
-        const review = this.reviews.find(r => r.reviewsId === reply.reviews.reviewsId);
+    // đăng kí nhận revierw 
+    // this.socket.subscribeReviewsToDoctor(this.doctor.idDoctor);
 
-        if (review && review.showReplies == true) {
-          review.replies!.unshift(reply);
-        }
-      });
-    });
   }
 
   ngOnDestroy(): void {
-    // this.socket.disconnect(); // Gọi hàm hủy kết nối khi rời trang
+    this.socket.disconnect(); // Gọi hàm hủy kết nối khi rời trang
   }
   loadDetailDoctor(): void {
     const today = new Date();
     const time = today.toISOString().split("T")[0];
-    const id = Number(this.route.snapshot.paramMap.get('id')); // Chuyển về number
+    const id = Number(this.route.snapshot.paramMap.get('id')); //lấy id từ url Chuyển về number
     if (!id) {
       console.error("ID không hợp lệ!");
       return;
@@ -81,12 +73,14 @@ export class ProfileComponent {
       next: (data) => {
         this.doctor = data;
         console.log(data);
+        // gọi load review để phía dưới có danh sách review để thêm review mới
         this.loadReviews()
         // Gọi WebSocket ở đây vì doctor đã có dữ liệu
+        // đăng kí nhận revierw 
         this.socket.subscribeReviewsToDoctor(this.doctor.idDoctor);
         // Lắng nghe sự kiện cập nhật review
         this.socket.getReview().subscribe(newReview => {
-          this.reviews = [newReview, ...this.reviews];
+          this.reviews = [newReview, ...this.reviews];//thay đổi tham chiếu để UI tự động cập nhật
           this.cdr.detectChanges(); // Cập nhật giao diện khi có dữ liệu mới
         });
       },
@@ -297,4 +291,47 @@ export class ProfileComponent {
       review.showReplies = false;
     }
   }
+  getReplyBox(reviewId: number) {
+    this.socket.subscribeRepliesToDoctor(reviewId);
+    this.socket.getReplies().subscribe(newReplies => {
+      console.log("Nhận được reply: " + newReplies)
+      const review = this.reviews.find(r => r.reviewsId === newReplies.reviews!.reviewsId);
+      if (review && review.showReplies == true) {
+        // Kiểm tra nếu reply đã tồn tại trước khi thêm
+        if (!review.replies!.some(r => r.idReviewReplies !== newReplies.idReviewReplies)) {
+          console.log("📥 Nhận reply mới:", newReplies);
+          review.replies = [newReplies, ...review.replies!];
+        }
+        console.log("Nhận được reply: " + newReplies)
+        review.replies = [newReplies, ...review.replies!];// thay đổi tham chiếu để có thể cập nhật giao diện
+      }
+    });
+    this.reviewService.findReplies(reviewId).subscribe({
+      next: (response) => {
+        const review = this.reviews.find(r => r.reviewsId === reviewId);
+        if (review) {
+          review.replies = response;
+          review.showReplies = true;
+        }
+      },
+      error: (error) => {
+        console.error("Mở danh sách các câu trả lời thất bại:", error);
+      }
+    })
+  }
+  senReplies(reviewId: number, content: string, star: number) {
+    const Contentreplies = (document.getElementById("inputReplies" + reviewId) as HTMLInputElement).value
+    console.log("Contentreplies")
+    // lấy thông tin qua
+    const replies: reviewReplies = {
+      content: Contentreplies,
+      reviews: {
+        reviewsId: reviewId,
+        content: content,
+        start: star
+      }
+    }
+    this.socket.sendReviewReplies(replies)
+  }
 }
+

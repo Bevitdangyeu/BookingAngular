@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { LichKhamService } from '../../../services/lichkhamservice';
+import { Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-admin-home',
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './admin-home.component.html',
   styleUrl: './admin-home.component.css'
 })

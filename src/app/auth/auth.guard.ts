@@ -12,6 +12,7 @@ export class AuthGuard implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): MaybeAsync<GuardResult> {
         const expectedRole = route.data['expectedRole'];// role yêu cầu từ route
         const userRole = this.authService.getUserRole();// lấy role từ token
+        console.log("Quyền" + userRole)
         if (userRole && expectedRole.includes(userRole)) {
             return true; // Cho phép truy cập nếu user có role phù hợp
         }

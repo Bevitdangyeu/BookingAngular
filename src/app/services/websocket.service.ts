@@ -17,7 +17,8 @@ export class WebSocketService {
     private tokenSubscription: StompSubscription | null = null;
     private pendingMessages: any[] = []; // Lưu trữ yêu cầu WebSocket chưa gửi
     private reviewSubject = new BehaviorSubject<reviewModel | null>(null);
-    private replySubject = new BehaviorSubject<reviewReplies[]>([]);
+    private replySubject = new BehaviorSubject<reviewReplies | null>(null);
+    private subscribedReplies: Set<number> = new Set();
     cdr: any;
 
     constructor(private http: HttpClient, private auth: AuthServiceComponent) {
@@ -27,7 +28,7 @@ export class WebSocketService {
 
     private async initWebSocket() {
         if (this.stompClient && this.stompClient.active) {
-            console.log("🔴 Đóng kết nối cũ trước khi mở kết nối mới...");
+            console.log("Đóng kết nối cũ trước khi mở kết nối mới...");
             await this.stompClient.deactivate(); // Đóng kết nối cũ
         }
 
@@ -104,6 +105,7 @@ export class WebSocketService {
         this.reviewSubscription = this.stompClient.subscribe(channel, message => {
             const newReview: reviewModel = JSON.parse(message.body);
             console.log("Dữ liệu được nhận được sau đăng kí là: " + newReview);
+            // chỉ có một giá trị newreview được phát ra cho tất cả các subcribe và giá trị cũ sẽ bị ghi đè khi có giá trị mới thêm vào
             this.reviewSubject.next(newReview);
             console.log(newReview)
         });
@@ -124,36 +126,24 @@ export class WebSocketService {
             }
         });
     }
-    // subscribeReviewsToDoctor(doctorId: number, reviews: reviewModel[]) {
-    //     if (!this.stompClient) {
-    //         console.error("WebSocket client (stompClient) chưa được khởi tạo!");
-    //         return;
-    //     }
-    //     console.log("Gọi tới đây")
-    //     if (this.reviewSubscription) {
-    //         this.reviewSubscription.unsubscribe();
-    //     }
-    //     console.log("Đăng kí nhận review")
-    //     const channel = `/topic/profile/${doctorId}`;
-    //     console.log(`Đăng ký nhận review từ WebSocket: ${channel}`);
-    //     this.reviewSubscription = this.stompClient.subscribe(channel, message => {
-    //         const newReview: reviewModel = JSON.parse(message.body);
-    //         reviews.unshift(newReview);
-    //         console.log("nhận được review mới: " + newReview)
-    //     });
-    // }
-
-    // subscribeRepliesToDoctor(doctorId: number) {
-    //     if (this.replySubscription) {
-    //         this.replySubscription?.unsubscribe();
-    //     }
-
-    //     const channel = `/topic/profile/${doctorId}/replies`;
-    //     this.replySubscription = this.stompClient.subscribe(channel, message => {
-    //         const newReply: reviewReplies = JSON.parse(message.body);
-    //         this.replySubject.next([...this.replySubject.value, newReply]);
-    //     });
-    // }
+    // đăng kí nhận bình luận cho trả lời bình luận
+    subscribeRepliesToDoctor(reviewId: number) {
+        // if (this.replySubscription) {
+        //     this.replySubscription?.unsubscribe(); 
+        // }
+        if (this.subscribedReplies.has(reviewId)) {
+            return;
+        }
+        const channel = `/topic/replies/${reviewId}`;
+        console.log(`Đăng ký nhận replies từ WebSocket: ${channel}`);
+        this.replySubscription = this.stompClient.subscribe(channel, message => {
+            const newReply: reviewReplies = JSON.parse(message.body);
+            console.log("Giá trị nhận được từ server là: " + newReply)
+            this.replySubject.next(newReply);
+        });
+        // Đánh dấu reviewId đã được đăng ký
+        this.subscribedReplies.add(reviewId);
+    }
     sendReview(review: reviewModel): Observable<any> {
         const token = localStorage.getItem('accessToken');
         const refreshToken = localStorage.getItem('refreshToken')
@@ -167,7 +157,7 @@ export class WebSocketService {
                 }
             });
 
-            // Lắng nghe phản hồi từ server trên `/topic/reviewer/{userId}`
+            // Lắng nghe phản hồi từ server trên `/topic/reviewer/{userId}` để xem thành công hay không và hiển thị thông báo cho người dùng
             const subscription = this.stompClient.subscribe(`/topic/reviewer/${review.appointment?.appointmentId}`, (message) => {
                 const response = JSON.parse(message.body);
                 console.log("📌 Nhận phản hồi từ WebSocket:", response);
@@ -178,6 +168,25 @@ export class WebSocketService {
             // Hủy subscribe nếu không nhận được phản hồi
             return () => subscription.unsubscribe();
         });
+    }
+    // hàm thêm reviewReplies
+    sendReviewReplies(reviewReplies: reviewReplies) {
+        const token = localStorage.getItem('accessToken');
+        console.log("fontend gọi thêm reviewreplies")
+        console.log("Dữ liệu gửi đi:", JSON.stringify(reviewReplies));
+        console.log("📩 Đang gửi tin nhắn đến:", this.stompClient);
+
+        return new Observable(observe => {
+            this.stompClient.publish({
+                destination: '/app/user/replies/add',
+                body: JSON.stringify(reviewReplies),
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+            observe.next();  // Thông báo đã gửi xong
+            observe.complete();  // Kết thúc Observable
+        }).subscribe();
     }
     // đăng kí lắng nghe phản hồi từ server để xử lý
     async listenStatusOfToekn() {
@@ -210,8 +219,9 @@ export class WebSocketService {
     getReview(): Observable<reviewModel> {
         return this.reviewSubject.asObservable().pipe(filter(review => review !== null)) as Observable<reviewModel>;
     }
-    getReplies(): Observable<reviewReplies[]> {
-        return this.replySubject.asObservable();
+    getReplies(): Observable<reviewReplies> {
+        console.log(" gọi tới get replies")
+        return this.replySubject.asObservable().pipe(filter(review => review !== null)) as Observable<reviewReplies>;
     }
     disconnect() {
         if (this.stompClient) {

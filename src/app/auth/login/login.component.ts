@@ -37,6 +37,8 @@ export class LoginComponent {
             this.router.navigate(['/admin/home']);
           } else if (response.role == 'USER') {
             this.router.navigate(['/public/HomePage']);
+          } else if (response.role == 'DOCTOR') {
+            this.router.navigate(['/admin/home']);
           }
         },
         error: (err) => {

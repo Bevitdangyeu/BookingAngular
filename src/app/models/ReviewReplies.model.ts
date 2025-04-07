@@ -3,10 +3,10 @@ import { userModel } from "./user.model";
 import { reviewModel } from "./reviews.model";
 
 export interface reviewReplies {
-    idReviewReplies: number;
+    idReviewReplies?: number;
     content: String;
-    createAt: Date;
-    updateAt: Date;
-    user: userModel;
-    reviews: reviewModel;
+    createAt?: Date;
+    updateAt?: Date;
+    user?: userModel;
+    reviews?: reviewModel;
 }

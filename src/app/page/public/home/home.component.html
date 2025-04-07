@@ -176,6 +176,84 @@
       </div>
     </div>
     </div>
+     <!-- =======================HIỂN THỊ DANH SÁCH BÀI VIẾT=====================-->
+    <!-- <section> begin ============================-->
+      <section class="pb-0">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 py-3">
+              <div class="bg-holder bg-size"
+                style="background-image:url(assets/img/gallery/doctors-us.png);background-position:top center;background-size:contain;">
+              </div>
+              <!--/.bg-holder-->
+  
+              <h1 class="text-center">OUR POST</h1>
+            </div>
+          </div>
+        </div>
+        <!-- end of .container-->
+      </section>
+        <!-- =====================Phần thân:Hiển thị danh sách bài viết=======================-->
+        <section class="py-5 flex justify-content-center">
+          <div class="bg-holder bg-size"
+            style="background-image:url(assets/public/img/gallery/doctors-bg.png);background-position:top center;background-size:contain;">
+          </div>
+          <!--/.bg-holder-->
+          <div class="container">
+            <div class="row justify-content-center ">
+              <div class="col-xl-10 px-0 d-flex w-100 justify-content-center">
+                <div id="carouselExampleDark2" class="carousel slide" data-bs-interval="false">
+                  <div class="carousel-inner " style="width: 1000px;">
+                    <!-- Lặp qua danh sách bác sĩ, nhóm 3 bác sĩ vào mỗi item -->
+                    <div *ngFor="let group of groupedPost; let i = index" class="carousel-item" [ngClass]="{'active': i === 0}">
+                      <div class="row h-100 m-lg-7 mx-3 mt-6 mx-md-4 my-md-7 flex">
+                        <!-- Hiển thị 3 bác sĩ trong một slide -->
+                        <div *ngFor="let post of group" class="col-md-4 mb-8 mb-md-0">
+                          <div class="card card-span h-100 shadow">
+                            <ng-container *ngIf="post && post.title">
+                            <div class="card-body d-flex flex-column flex-center py-5">
+                              <div class="text-center">
+                                <img class="imageDoctor" *ngIf="post" 
+                                [src]="'http://localhost:8080/uploads/'+post.image" 
+                                alt="Doctor Image" />
+                              </div>
+                              <div style="text-align: center;">
+                                <h5 *ngIf="post.title" class="mt-3">{{post.title }}</h5>
+                                
+                                <p *ngIf="post.like" class="mb-0 fs-xxl-1 mt-3 mb-2">
+                                  Lượt thích: <span>{{ post.like }}</span>
+                                </p>                        
+                              </div>
+                                <div class="text-center">
+                                  <a *ngIf="post.postId" 
+                                     class="btn btn-outline-secondary rounded-pill" 
+                                     [routerLink]="'/public/profile/' + post.postId">
+                                    View Profile
+                                  </a>
+                                </div>                
+                            </div>
+                          </ng-container>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Điều khiển chuyển ảnh -->
+                  <button class="buttonCarousel" class="carousel-control-prev d-block buttonCarousel" type="button" data-bs-target="#carouselExampleDark2" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"><i style="color: #344767;font-weight: bold;" class="fa fa-arrow-left" aria-hidden="true"></i></span>
+                    <span style="color: black;">Previous</span>
+                  </button>
+                  <button class="buttonCarousel" class="carousel-control-next d-block buttonCarousel" type="button" data-bs-target="#carouselExampleDark2" data-bs-slide="next">
+                    <span style="color: black;">Next</span>
+                    <span class="carousel-control-next-icon" aria-hidden="true"><i style="color: #344767; font-weight: bold;" class="fa fa-arrow-right" aria-hidden="true"></i></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>      
+        </section>
+    
     <!-- =======================HIỂN THỊ BỆNH VIỆN=====================-->
     <!-- <section> begin ============================-->
     <section class="pb-0">
@@ -205,37 +283,30 @@
               <div id="carouselExampleDark" class="carousel slide" data-bs-interval="false">
                 <div class="carousel-inner " style="width: 1000px;">
                   <!-- Lặp qua danh sách bác sĩ, nhóm 3 bác sĩ vào mỗi item -->
-                  <div *ngFor="let group of groupedDoctors; let i = index" class="carousel-item" [ngClass]="{'active': i === 0}">
+                  <div *ngFor="let group of groupedHospital; let i = index" class="carousel-item" [ngClass]="{'active': i === 0}">
                     <div class="row h-100 m-lg-7 mx-3 mt-6 mx-md-4 my-md-7 flex">
                       <!-- Hiển thị 3 bác sĩ trong một slide -->
-                      <div *ngFor="let doctor of group" class="col-md-4 mb-8 mb-md-0">
+                      <div *ngFor="let hospital of group" class="col-md-4 mb-8 mb-md-0">
                         <div class="card card-span h-100 shadow">
-                          <ng-container *ngIf="doctor && doctor.userDTO">
+                          <ng-container *ngIf="hospital && hospital.hospitalName">
                           <div class="card-body d-flex flex-column flex-center py-5">
                             <div class="text-center">
-                              <img class="imageDoctor" *ngIf="doctor" 
-                              [src]="'https://img.freepik.com/premium-photo/smiling-doctor-his-practice_13339-193671.jpg?w=1380'" 
+                              <img class="imageDoctor" *ngIf="hospital" 
+                              [src]="'http://localhost:8080/uploads/'+hospital.image" 
                               alt="Doctor Image" />
                             </div>
                             <div style="text-align: center;">
-                              <h5 *ngIf="doctor.userDTO.fullName" class="mt-3">{{ doctor.userDTO.fullName }}</h5>
+                              <h5 *ngIf="hospital.hospitalName" class="mt-3">{{hospital.hospitalName }}</h5>
                               
-                              <p *ngIf="doctor.expertise" class="mb-0 fs-xxl-1">
-                                Chuyên môn: <span>{{ doctor.expertise }}</span>
+                              <p *ngIf="hospital.address" class="mb-0 fs-xxl-1  mt-3 mb-2">
+                                Địa chỉ: <span>{{ hospital.address }}</span>
                               </p>                        
-                              
-                              <p *ngIf="doctor.hospital" style="text-align: center;" class="text-600 mb-0">{{ doctor.hospital }}</p>
-                              
-                              <p *ngIf="doctor.experience" class="text-600 mb-4">
-                                <span>{{ doctor.experience }}</span> years experience
-                              </p>
-                            
                             </div>
                               <div class="text-center">
-                                <a *ngIf="doctor.userDTO.idUser" 
+                                <a *ngIf="hospital.hospitalId" 
                                    class="btn btn-outline-secondary rounded-pill" 
-                                   [routerLink]="'/public/profile/' + doctor.idDoctor">
-                                  View Profile
+                                   [routerLink]="'/public/profile/' + hospital.hospitalId">
+                                  View Detail
                                 </a>
                               </div>
                             
@@ -281,73 +352,74 @@
       <!-- end of .container-->
 
     </section>
-  <section class="py-5 flex justify-content-center">
-      <div class="bg-holder bg-size"
-        style="background-image:url(assets/public/img/gallery/doctors-bg.png);background-position:top center;background-size:contain;">
-      </div>
-      <!--/.bg-holder-->
-      <div class="container">
-        <div class="row justify-content-center ">
-          <div class="col-xl-10 px-0 d-flex w-100 justify-content-center">
-            <div id="carouselExampleDark" class="carousel slide" data-bs-interval="false">
-              <div class="carousel-inner " style="width: 1000px;">
-                <!-- Lặp qua danh sách bác sĩ, nhóm 3 bác sĩ vào mỗi item -->
-                <div *ngFor="let group of groupedDoctors; let i = index" class="carousel-item" [ngClass]="{'active': i === 0}">
-                  <div class="row h-100 m-lg-7 mx-3 mt-6 mx-md-4 my-md-7 flex">
-                    <!-- Hiển thị 3 bác sĩ trong một slide -->
-                    <div *ngFor="let doctor of group" class="col-md-4 mb-8 mb-md-0">
-                      <div class="card card-span h-100 shadow">
-                        <ng-container *ngIf="doctor && doctor.userDTO">
-                        <div class="card-body d-flex flex-column flex-center py-5">
-                          <div class="text-center">
-                            <img class="imageDoctor" *ngIf="doctor" 
-                            [src]="'https://img.freepik.com/premium-photo/smiling-doctor-his-practice_13339-193671.jpg?w=1380'" 
-                            alt="Doctor Image" />
-                          </div>
-                          <div style="text-align: center;">
-                            <h5 *ngIf="doctor.userDTO.fullName" class="mt-3">{{ doctor.userDTO.fullName }}</h5>
-                            
-                            <p *ngIf="doctor.expertise" class="mb-0 fs-xxl-1">
-                              Chuyên môn: <span>{{ doctor.expertise }}</span>
-                            </p>                        
-                            
-                            <p *ngIf="doctor.hospital" style="text-align: center;" class="text-600 mb-0">{{ doctor.hospital }}</p>
-                            
-                            <p *ngIf="doctor.experience" class="text-600 mb-4">
-                              <span>{{ doctor.experience }}</span> years experience
-                            </p>
-                          
-                          </div>
-                            <div class="text-center">
-                              <a *ngIf="doctor.userDTO.idUser" 
-                                 class="btn btn-outline-secondary rounded-pill" 
-                                 (click)="viewProfile(doctor.userDTO.idUser)" >
-                                View Profile
-                              </a>
-                            </div>
-                          
-                        </div>
-                      </ng-container>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Điều khiển chuyển ảnh -->
-              <button class="buttonCarousel" class="carousel-control-prev d-block buttonCarousel" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"><i style="color: #344767;font-weight: bold;" class="fa fa-arrow-left" aria-hidden="true"></i></span>
-                <span style="color: black;">Previous</span>
-              </button>
-              <button class="buttonCarousel" class="carousel-control-next d-block buttonCarousel" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
-                <span style="color: black;">Next</span>
-                <span class="carousel-control-next-icon" aria-hidden="true"><i style="color: #344767; font-weight: bold;" class="fa fa-arrow-right" aria-hidden="true"></i></span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>      
-    </section>
+  <!-- =====================Phần thân:Hiển thị danh sách bệnh viện=======================-->
+ <section class="py-5 flex justify-content-center">
+   <div class="bg-holder bg-size"
+     style="background-image:url(assets/public/img/gallery/doctors-bg.png);background-position:top center;background-size:contain;">
+   </div>
+   <!--/.bg-holder-->
+   <div class="container">
+     <div class="row justify-content-center ">
+       <div class="col-xl-10 px-0 d-flex w-100 justify-content-center">
+         <div id="carouselExampleDark1" class="carousel slide" data-bs-interval="false">
+           <div class="carousel-inner " style="width: 1000px;">
+             <!-- Lặp qua danh sách bác sĩ, nhóm 3 bác sĩ vào mỗi item -->
+             <div *ngFor="let group of groupedDoctors; let i = index" class="carousel-item" [ngClass]="{'active': i === 0}">
+               <div class="row h-100 m-lg-7 mx-3 mt-6 mx-md-4 my-md-7 flex">
+                 <!-- Hiển thị 3 bác sĩ trong một slide -->
+                 <div *ngFor="let doctor of group" class="col-md-4 mb-8 mb-md-0">
+                   <div class="card card-span h-100 shadow">
+                     <ng-container *ngIf="doctor && doctor.userDTO">
+                     <div class="card-body d-flex flex-column flex-center py-5">
+                       <div class="text-center">
+                         <img class="imageDoctor" *ngIf="doctor" 
+                         [src]="'http://localhost:8080/uploads/'+doctor.userDTO.image" 
+                         alt="Doctor Image" />
+                       </div>
+                       <div style="text-align: center;">
+                         <h5 *ngIf="doctor.userDTO.fullName" class="mt-3">{{ doctor.userDTO.fullName }}</h5>
+                         
+                         <p *ngIf="doctor.expertise" class="mb-0 fs-xxl-1">
+                           Chuyên môn: <span>{{ doctor.expertise }}</span>
+                         </p>                        
+                         
+                         <p *ngIf="doctor.hospital" style="text-align: center;" class="text-600 mb-0">{{ doctor.hospital }}</p>
+                         
+                         <p *ngIf="doctor.experience" class="text-600 mb-4  mt-3 mb-2">
+                           <span>{{ doctor.experience }}</span> years experience
+                         </p>
+                       
+                       </div>
+                         <div class="text-center">
+                           <a *ngIf="doctor.userDTO.idUser" 
+                              class="btn btn-outline-secondary rounded-pill" 
+                              [routerLink]="'/public/profile/' + doctor.idDoctor">
+                             View Detail
+                           </a>
+                         </div>
+                       
+                     </div>
+                   </ng-container>
+                   </div>
+                 </div>
+               </div>
+             </div>
+           </div>
+           
+           <!-- Điều khiển chuyển ảnh -->
+           <button class="buttonCarousel" class="carousel-control-prev d-block buttonCarousel" type="button" data-bs-target="#carouselExampleDark1" data-bs-slide="prev">
+             <span class="carousel-control-prev-icon" aria-hidden="true"><i style="color: #344767;font-weight: bold;" class="fa fa-arrow-left" aria-hidden="true"></i></span>
+             <span style="color: black;">Previous</span>
+           </button>
+           <button class="buttonCarousel" class="carousel-control-next d-block buttonCarousel" type="button" data-bs-target="#carouselExampleDark1" data-bs-slide="next">
+             <span style="color: black;">Next</span>
+             <span class="carousel-control-next-icon" aria-hidden="true"><i style="color: #344767; font-weight: bold;" class="fa fa-arrow-right" aria-hidden="true"></i></span>
+           </button>
+         </div>
+       </div>
+     </div>
+   </div>      
+ </section>
 
     <!-- ============================================-->
     <!-- <section> begin ============================-->

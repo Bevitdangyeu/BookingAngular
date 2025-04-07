@@ -83,7 +83,7 @@
     <div *ngIf="reviews.length>0">
       <div *ngFor="let review of  reviews">
         <div style="display: flex;margin-bottom: 20px;">
-          <img src="/{{review.user?.image}}" style="width: 50px;height: 50px;border-radius: 50%;">
+          <img  [src]="'http://localhost:8080/uploads/'+review.user?.image"  style="width: 50px;height: 50px;border-radius: 50%;">
             <div class="comment">
                 <!-- <p style="font-weight: bold;margin: 0px 0px 0px 10px;" th:text="${evaluate.fullName}"></p> -->
                 <div>
@@ -99,13 +99,16 @@
                   <button
                   style="border: 0px;height:10px;color: #6d6d6d;background-color: transparent;margin-left: 10px;"
                   class="reply-button" (click)="showReplyBox(review.reviewsId!,1)">Trả lời</button>
+                  <button
+                  style="border: 0px;height:10px;color: #6d6d6d;background-color: transparent;margin-left: 10px;"
+                  class="reply-button" (click)="getReplyBox(review.reviewsId!)">Xem các câu trả lời</button>
                 </div>
                 <div class="reply-box" *ngIf="replyVisibility[review.reviewsId!]==true">
                     <textarea
                     style="border-radius: 20px;width: 300px; height:40px;outline: none; border: 1px dashed ;padding-left: 20px;margin-left: 30px;"
-                    class="reply-text" placeholder="Nhập câu trả lời..."></textarea>
+                    class="reply-text" id="inputReplies{{review.reviewsId}}" placeholder="Nhập câu trả lời..."></textarea>
                   <div style="margin-left: 30px;">
-                    <button
+                    <button (click)="senReplies(review.reviewsId!,review.content,review.start)"
                     style="border-radius: 8px; border: 0px; background-color: #d4e6f1;height: 35px;width: 50px;margin-top:10px;"
                     class="send-reply">Gửi
                     </button>
@@ -115,13 +118,16 @@
                   </div>
                 </div>
                 <!-- danh sách các câu trả lời -->
-                <div *ngIf="review.showReplies">
+                <div  *ngIf="review.showReplies">
                   <div *ngFor="let reply of review.replies" style="display: flex;">
-                    <img src="/{{review.user?.image}}" style="width: 50px;height: 50px;border-radius: 50%;">
+                    <img [src]="'http://localhost:8080/uploads/'+reply.user!.image"  style="width: 50px;height: 50px;border-radius: 50%;">
                     <div>
                       <!-- tên -->
-                      <span  style="font-weight: bold;margin: 0px 0px 0px 10px;">{{review.user?.fullName}}</span>
+                      <span  style="font-weight: bold;margin: 0px 0px 0px 10px;">{{reply.user!.fullName}}</span>
                       <p style="margin: 0px 0px 0px 10px;">{{reply.content}}</p>
+                      <!-- <button
+                      style="border: 0px;height:10px;color: #6d6d6d;background-color: transparent;margin-left: 10px;"
+                      class="reply-button" (click)="showReplyBox(review.reviewsId!,1)">Trả lời</button> -->
                     </div>
                   </div>
                 </div>

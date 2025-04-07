@@ -1,0 +1,152 @@
+<div id="wrapper">
+  <div>
+    <div style="margin: 30px 0px 0px 30px;flex: 1;background-color: #2b6283;padding: 20px;border-radius: 20px;">
+      <!-- phần thêm và tìm kiếm -->
+      <div style="display: flex;">
+        <div style="display: flex;">
+          <div>
+            <label for="category">Chọn chủ đề: </label>
+            <select style="border-radius: 20px; width: 300px; height: 40px; outline: none; padding:0px 20px 0px 20px; 
+                        background-color: #f4f7f9; border: none; display: block;" id="category" name="category">
+              <option style="color:black;" value="" selected disabled>Chọn chủ đề</option>
+              <option *ngFor="let topic of topics" [value]="topic.categoryId">{{topic.categoryName}}</option>
+            </select>
+            <label style="margin-top: 10px;" for="">TIME</label>
+            <div style="display: flex;">
+              <input type="date" placeholder="Chọn ngày"
+                style="border-radius: 20px;width: 200px;height: 40px; outline: none;padding:0px 20px 0px 30px;background-color: #f4f7f9;display: block;border: 1px #a9cce3 solid">
+            </div>
+          </div>
+          <button
+            style="border-radius: 20px; background-color:#367198 ; height: 35px;border: 0px;width: 80px;margin: 32px 0px 0px 20px;color: aliceblue; "
+            id="button-search" type="button">Search</button>
+        </div>
+        <div style=" flex: 1;">
+          <button type="button"
+            style="border: 0px; border-radius: 20px; height: 40px; width: 170px;margin: 27px 40px 0px 20px;float: right; "
+            data-bs-toggle="modal" data-bs-target="#AddPostModel">
+            <i style="color: #3583b6;" class="fa fa-plus-circle" aria-hidden="true"></i> THÊM BÀI VIẾT
+          </button>
+        </div>
+      </div>
+    </div>
+    <section style="margin-top: 70px;">
+      <div class="container">
+        <div class="row" id="postContainer">
+          <div class="col-sm-6 col-lg-3 mb-4" *ngFor="let post of listPost;let i=index">
+            <div class="card h-100 shadow card-span rounded-3"><img
+                style="height: 250px;width: 250px;object-fit: cover;" class="card-img-top rounded-top-3"
+                [src]="'http://localhost:8080/uploads/'+post.image" alt="news" />
+              <div class="card-body"><span class="fs--1 text-primary me-3">Lifestyle</span>
+                <svg class="bi bi-calendar2 me-2" xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                  fill="currentColor" viewBox="0 0 16 16">
+                  <path
+                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z">
+                  </path>
+                  <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z">
+                  </path>
+                </svg>
+                <a style="display: block;cursor: pointer;color: black;font-weight: bold;"
+                  class="font-base fs-lg-0 fs-xl-1 my-3">{{post.title}}</a>
+                <div style="display: flex; justify-content: center;">
+                  <button (click)="editPost(post)" class="btnEdit">edit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Phân trang -->
+        <div class="pagination">
+          <button (click)="prevPage()" [disabled]="currentPage === 0" class="pageButton"><i
+              class="fa fa-arrow-left next" aria-hidden="true"></i></button>
+          <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+          <button (click)="nextPage()" [disabled]="currentPage === totalPages - 1" class="pageButton"><i
+              class="fa fa-arrow-right next" aria-hidden="true"></i></button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<!-- hiển thị model -->
+<div class="modal fade" id="AddPostModel" tabindex="-1" aria-labelledby="addPostgModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bookingModalLabel">NEW POST</h5>
+        <button
+          style="height: 30px;width: 30px;color: black;background-color: transparent;margin-right: 20px;border: 0px;"
+          type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="resetForm()">Close</button>
+      </div>
+      <div style="margin: 50px;margin-top: 0px;" id="contact">
+        <div style="text-align: center;width: 100%;margin-bottom: 20px;">
+          <h2>THÊM BÀI VIẾT</h2>
+        </div>
+        <div class="row con-form" id="ttPost" style="width: 100%;">
+
+          <div class="col-md-12" style="margin-bottom: 10px;">
+            <label for="title">Tiêu đề: </label>
+            <input
+              style="border-radius: 20px;width: 400px;height: 45px; outline: none;padding-left: 20px;background-color: #f4f7f9;border: none;display: block;"
+              type="text" name="title" id="title" placeholder="Nhập tiêu đề bài viết..." [(ngModel)]="postEdit.title">
+          </div>
+          <!-- lựa chọn thể loại -->
+          <div class="col-md-12" style="margin-bottom: 10px;">
+            <label for="category">Chọn chủ đề: </label>
+            <select style="border-radius: 20px; width: 300px; height: 40px; outline: none; padding:0px 20px 0px 20px; 
+                        background-color: #f4f7f9; border: none; display: block;" id="category" name="category"
+              [(ngModel)]="postEdit.category.categoryId">
+              <option style="color:black;" value="" selected disabled>Chọn chủ đề</option>
+              <option *ngFor="let topic of topics" [value]="topic.categoryId">{{topic.categoryName}}</option>
+            </select>
+          </div>
+          <div class="col-md-12">
+            <editor [(ngModel)]="postEdit.content" [init]="editorConfig"
+              apiKey="hzqvekar7x08uycop3yi0u1uszhrv4brvjndfxblep0evjcq">
+            </editor>
+          </div>
+          <div style="width:100px;margin:10px 0px 10px 0px">
+            <label for="fileInput" style="
+                                        display: inline-flex;
+                                        align-items: center;
+                                        gap: 8px;
+                                        padding: 10px 15px;
+                                        border: 1px solid #ccc;
+                                        border-radius: 8px;
+                                        cursor: pointer;
+                                        font-size: 16px;
+                                        color: #555;
+                                        background-color: #f9f9f9;
+                                        transition: background-color 0.3s, border-color 0.3s;">
+
+              <img src="assets/public/img/photo.png" alt="icon" style="width: 24px; height: 24px; margin-right: 8px;">
+              Ảnh/video
+            </label>
+            <img style="width: 60px;" id="imagePreview">
+            <div class="d-flex">
+              <div *ngIf="imageUrl" style="position: relative; display: inline-block; margin-right: 10px;">
+                <button class="btnDelImg" (click)="deleteImg()">
+                  <i class="fa-regular fa-circle-xmark" style="background-color: #ccc;border-radius: 30px;"></i>
+                </button>
+                <img [src]="imageUrl" style="width: 100px;margin-bottom:20px ;" id="imagePreview">
+                <!-- Hiển thị hình ảnh -->
+                <div *ngIf="postEdit.image" style="position: relative; display: inline-block; margin-right: 10px;">
+                  <button class="btnDelImg" (click)="deleteImg()">
+                    <i class="fa-regular fa-circle-xmark" style="background-color: #ccc;border-radius: 30px;"></i>
+                  </button>
+                </div>
+              </div>
+              <input [disabled]="isDisabled" style="display: none;" type="file" id="fileInput"
+                (change)="previewImage($event)">
+            </div>
+            <div class="col-md-12 sub-but">
+              <button
+                style="width:120px;height: 40px; border-radius: 20px;background-color: #a9cce3;outline: none;border: 0px;"
+                type="button" (click)="addPost()">ĐĂNG BÀI
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

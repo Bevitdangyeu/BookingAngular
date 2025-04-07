@@ -13,6 +13,7 @@ export class reviewsSevice {
 
     add(review: reviewModel): Observable<any> {
         console.log("vào service để thêm đánh giá")
+        // sendreview sẽ trả về đối tượng được thêm ResponseEntity<Map<String,String>>
         return this.websocketService.sendReview(review);
     }
     findByDoctor(id: number): Observable<reviewModel[]> {
@@ -20,6 +21,6 @@ export class reviewsSevice {
         return this.http.get<reviewModel[]>(this.apiUrl + "public/getReviews/" + `${id}`);
     }
     findReplies(id: number): Observable<reviewReplies[]> {
-        return this.http.get<reviewReplies[]>(this.apiUrl + "public.getReplies" + `${id}`);
+        return this.http.get<reviewReplies[]>(this.apiUrl + "public/replies/findAll/" + `${id}`);
     }
 }
