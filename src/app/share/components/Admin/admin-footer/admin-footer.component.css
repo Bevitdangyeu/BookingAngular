@@ -2,14 +2,16 @@
     width: 100%;
 }
 .divInfo{
-    padding: 50px;
-    background-color: #344767;
+    padding: 30px;
+    background-color: #67748e;
     text-align: center;
     justify-content: center;
     align-items: center;
+    color: white;
 }
 .info{
     margin: 20px;
+    color: white;
 }
 .banquyen{
     justify-content: center;

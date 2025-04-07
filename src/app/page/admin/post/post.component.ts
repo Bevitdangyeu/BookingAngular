@@ -250,6 +250,58 @@ export class PostComponent {
       modalInstance.show();
     }
   }
+
+  deletePost(id: number) {
+    Swal.fire({
+      title: 'Bạn có chắc muốn xoá?',
+      text: 'Hành động này không thể hoàn tác!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Xoá',
+      cancelButtonText: 'Huỷ',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // tiến hành gọi api để xóa
+        this.postService.delete(id).subscribe({
+          next: (data) => {
+            const index = this.listPost.findIndex(p => p.postId === id);
+            if (index !== -1) {
+              this.listPost = this.listPost.filter(post => post.postId !== id);
+            }
+            console.log(" trạng thái xóa: " + data.message)
+            if (data.message)
+              Swal.fire({
+                title: 'Successfully!',
+                text: 'Xóa bài viết thành công!',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                timer: 3000,
+                timerProgressBar: true,
+                customClass: {
+                  popup: 'custom-popup-logout',
+                  title: 'custom-title-logout'
+                }
+              });
+          }, error: (error) => {
+            Swal.fire({
+              title: 'Error!',
+              text: 'Xóa bài viết thất bại, vui lòng thử lại!',
+              icon: 'error',
+              confirmButtonText: 'OK',
+              timer: 3000,
+              timerProgressBar: true,
+              customClass: {
+                popup: 'custom-popup-logout',
+                title: 'custom-title-logout'
+              }
+            });
+          }
+        })
+      }
+    })
+  }
   prevPage() {
     if (this.currentPage > 0) {
       this.currentPage--;

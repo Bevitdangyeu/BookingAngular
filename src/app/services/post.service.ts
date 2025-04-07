@@ -18,4 +18,7 @@ export class PostService {
     getPostByDoctorId(page: number): Observable<PagebleModel> {
         return this.http.get<PagebleModel>(this.apiUrl + `doctor/listPost/${page}`)
     }
+    delete(id: number): Observable<{ message: string }> {
+        return this.http.delete<{ message: string }>(this.apiUrl + `doctor/post/delete/${id}`)
+    }
 }

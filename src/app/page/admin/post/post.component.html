@@ -50,6 +50,7 @@
                   class="font-base fs-lg-0 fs-xl-1 my-3">{{post.title}}</a>
                 <div style="display: flex; justify-content: center;">
                   <button (click)="editPost(post)" class="btnEdit">edit</button>
+                  <button (click)="deletePost(post.postId!)" class="btnEdit" style="margin-left: 10px;">delete</button>
                 </div>
               </div>
             </div>
