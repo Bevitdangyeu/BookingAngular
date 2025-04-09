@@ -7,19 +7,24 @@
           <div>
             <label for="category">Chọn chủ đề: </label>
             <select style="border-radius: 20px; width: 300px; height: 40px; outline: none; padding:0px 20px 0px 20px; 
-                        background-color: #f4f7f9; border: none; display: block;" id="category" name="category">
+                        background-color: #f4f7f9; border: none; display: block;" id="category" name="category"
+              [(ngModel)]="selectedCategoryId">
               <option style="color:black;" value="" selected disabled>Chọn chủ đề</option>
               <option *ngFor="let topic of topics" [value]="topic.categoryId">{{topic.categoryName}}</option>
             </select>
             <label style="margin-top: 10px;" for="">TIME</label>
             <div style="display: flex;">
               <input type="date" placeholder="Chọn ngày"
-                style="border-radius: 20px;width: 200px;height: 40px; outline: none;padding:0px 20px 0px 30px;background-color: #f4f7f9;display: block;border: 1px #a9cce3 solid">
+                style="border-radius: 20px;width: 200px;height: 40px; outline: none;padding:0px 20px 0px 30px;background-color: #f4f7f9;display: block;border: 1px #a9cce3 solid"
+                [(ngModel)]="time">
             </div>
           </div>
           <button
             style="border-radius: 20px; background-color:#367198 ; height: 35px;border: 0px;width: 80px;margin: 32px 0px 0px 20px;color: aliceblue; "
-            id="button-search" type="button">Search</button>
+            id="button-search" type="button" (click)="filterByCategoryAndDate()">Search</button>
+          <button
+            style="border-radius: 20px; background-color:#367198 ; height: 35px;border: 0px;width: 80px;margin: 32px 0px 0px 20px;color: aliceblue; "
+            id="button-search" type="button" (click)="resetFilter()">Reset</button>
         </div>
         <div style=" flex: 1;">
           <button type="button"

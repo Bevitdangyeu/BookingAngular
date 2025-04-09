@@ -1,0 +1,68 @@
+<div id="wrapper">
+  <div>
+    <div class="container" style="margin: 30px 0px 0px 30px;flex: 1;padding: 20px;border-radius: 20px;">
+      <!-- phần thêm và tìm kiếm -->
+      <div style="display: flex;">
+        <div style="display: flex;">
+          <div>
+            <label for="category">Chọn chủ đề: </label>
+            <select style="border-radius: 20px; width: 300px; height: 40px; outline: none; padding:0px 20px 0px 20px; 
+                          background-color: #f4f7f9; border: none; display: block;" id="category" name="category"
+              [(ngModel)]="selectedCategoryId">
+              <option style="color:black;" value="" selected disabled>Chọn chủ đề</option>
+              <option *ngFor="let topic of topics" [value]="topic.categoryId">{{topic.categoryName}}</option>
+            </select>
+          </div>
+          <button
+            style="border-radius: 20px; background-color:#367198 ; height: 35px;border: 0px;width: 80px;margin: 32px 0px 0px 20px;color: aliceblue; "
+            id="button-search" type="button" (click)="filterByCategory()">Search</button>
+        </div>
+      </div>
+    </div>
+    <section style="margin-top: 70px;">
+      <div class="container">
+        <div class="row" id="postContainer">
+          <div class="col-sm-6 col-lg-3 mb-4" *ngFor="let post of listPost;let i=index">
+            <div class="card h-100 shadow card-span rounded-3"><img
+                style="height: 250px;width: 250px;object-fit: cover;" class="card-img-top rounded-top-3"
+                [src]="'http://localhost:8080/uploads/'+post.image" alt="news" />
+              <div class="card-body"><span class="fs--1 text-primary me-3">Lifestyle</span>
+                <svg class="bi bi-calendar2 me-2" xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                  fill="currentColor" viewBox="0 0 16 16">
+                  <path
+                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z">
+                  </path>
+                  <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z">
+                  </path>
+                </svg>
+                <div style="text-align: center;">
+                  <h5 *ngIf="post.title" style="height: 70px;" class="mt-3">{{post.title }}</h5>
+
+                  <p class="mb-0 fs-xxl-1 mt-3 mb-2">
+                    Lượt thích: <span>{{ post.like }}</span>
+                  </p>
+                </div>
+                <div style="display: flex; justify-content: center;">
+                  <div class="text-center">
+                    <a *ngIf="post.postId" class="btn btn-outline-secondary rounded-pill"
+                      [routerLink]="'/public/post/' + post.postId">
+                      View Post
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Phân trang -->
+        <div class="pagination">
+          <button (click)="prevPage()" [disabled]="currentPage === 0" class="pageButton"><i
+              class="fa fa-arrow-left next" aria-hidden="true"></i></button>
+          <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+          <button (click)="nextPage()" [disabled]="currentPage === totalPages - 1" class="pageButton"><i
+              class="fa fa-arrow-right next" aria-hidden="true"></i></button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

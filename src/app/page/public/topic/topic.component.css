@@ -1,0 +1,40 @@
+/* post-list.component.css */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .pagination button {
+    margin: 0 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .pageButton {
+    background-color: transparent;
+    cursor: not-allowed;
+    border: none;
+  }
+ .next{
+    border: none;
+    color: #1f658f;
+    font-weight: bold;
+    font-size: 30px;
+ }
+ .btnEdit{
+    border: none;
+    padding: 5px 20px 5px 20px;
+    background-color: #1f658f;
+    border-radius: 20px;
+    color: white;
+ }
+ .btnDelImg{
+  position: absolute;
+  top: -10px; 
+  right: -10px;
+  background: transparent; 
+  border: none; 
+  color: white; 
+  font-size: 18px;
+ }

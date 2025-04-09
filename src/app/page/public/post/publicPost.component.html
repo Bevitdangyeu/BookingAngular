@@ -1,0 +1,108 @@
+<body>
+  <header th:replace="common/web/header :: header"></header>
+  <!-- Page content-->
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-lg-8">
+        <!-- Post content-->
+        <article>
+          <!-- Post header-->
+          <header class="mb-4">
+            <!-- Post title-->
+            <h1 class="fw-bolder mb-1">{{post.title}}</h1>
+            <!-- Post meta content-->
+            <div class="text-muted fst-italic mb-2">Posted on <span>{{post.createAt| date:'dd/MM/yyyy HH:mm'}}</span>
+            </div>
+            <div class="text-muted fst-italic mb-2">Tác giả: Bác sĩ
+              <span>{{post.doctorDTO?.userDTO?.fullName}}</span></div>
+            <!-- Post categories-->
+            <a class="badge bg-secondary text-decoration-none link-light" href="#!"
+              th:text="${post.category.nameCategory}"></a>
+            <button style="height: 30px;width: 70px;border-radius: 10px;border: none;background-color: cornflowerblue;">
+              <i class="fa-solid fa-thumbs-up" style="color: white;margin-right: 10px;"></i><span>{{post.like}}</span>
+            </button>
+          </header>
+          <!-- Preview image figure-->
+          <figure class="mb-4"><img style="width: 855px;height: 500px;object-fit: cover;"
+              [src]="'http://localhost:8080/uploads/'+post.image" alt="..." />
+          </figure>
+          <!-- Post content-->
+          <section class="mb-5">
+            <div style="text-align: justify;" [innerHTML]="post.content"></div>
+          </section>
+          <div style="margin: 20px 0px 20px 0px;text-align: right;">
+            <button onclick="buttonLike(this)" data-id="${post.postId}"
+              style="height: 40px;width: 100px;border-radius: 10px;border: none;background-color: cornflowerblue;">
+              <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> THÍCH
+            </button>
+          </div>
+        </article>
+        <!-- Comments section-->
+        <section class="mb-5">
+          <div class="card bg-light">
+            <div class="card-body">
+              <!-- Comment form-->
+              <form class="mb-4"><textarea class="form-control" rows="3"
+                  placeholder="Cùng thảo luận nhé!"></textarea></form>
+              <!-- Comment with nested comments-->
+              <div class="d-flex mb-4">
+                <!-- Parent comment-->
+                <div class="flex-shrink-0"><img class="rounded-circle"
+                    src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                <div class="ms-3">
+                  <div class="fw-bold">Hoàng Nam</div>
+                  Bài viết rất hay và hữu ích cho tôi!. Cảm ơn bác sĩ
+                  <!-- Child comment 1-->
+                  <div class="d-flex mt-4">
+                    <div class="flex-shrink-0"><img class="rounded-circle"
+                        src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                    <div class="ms-3">
+                      <div class="fw-bold">Mỹ Hà</div>
+                      bài viết tuyệt vời, rất hữu ích.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Single comment-->
+              <div class="d-flex">
+                <div class="flex-shrink-0"><img class="rounded-circle"
+                    src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                <div class="ms-3">
+                  <div class="fw-bold">Uyển Lan</div>
+                  Cảm ơn bác sĩ đã chia sẽ
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <!-- Side widgets-->
+      <div class="col-lg-4">
+        <!-- Search widget-->
+        <div class="card mb-4">
+          <div class="card-header" style="background-color: #367198; color: white;">Search</div>
+          <div class="card-body">
+            <div class="input-group">
+              <input class="form-control" style="border-radius: 20px;background-color: #f2f3f4;border: 0px;" type="text"
+                placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
+              <button
+                style="border-radius: 20px; background-color:#367198 ; height: 35px;border: 0px;width: 80px; margin-left: 20px;"
+                id="button-search" type="button">Search</button>
+            </div>
+          </div>
+        </div>
+        <!-- Categories widget-->
+        <div class="card mb-4">
+          <div class="card-header" style="background-color: #367198; color: white;">Categories</div>
+          <div class="card-body">
+            <ul class="list-unstyled mb-0" style="width: 100%;">
+              <li *ngFor="let topic of topics; let i = index" class="liTopic"
+                style="width: 100%; text-decoration: none;">
+                <a class="aTopic" [routerLink]="'/public/topic/' + topic.categoryId">{{ topic.categoryName }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

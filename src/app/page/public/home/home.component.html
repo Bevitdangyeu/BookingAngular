@@ -227,8 +227,8 @@
                                 <div class="text-center">
                                   <a *ngIf="post.postId" 
                                      class="btn btn-outline-secondary rounded-pill" 
-                                     [routerLink]="'/public/profile/' + post.postId">
-                                    View Profile
+                                     [routerLink]="'/public/post/' + post.postId">
+                                    View Post
                                   </a>
                                 </div>                
                             </div>
@@ -305,7 +305,7 @@
                               <div class="text-center">
                                 <a *ngIf="hospital.hospitalId" 
                                    class="btn btn-outline-secondary rounded-pill" 
-                                   [routerLink]="'/public/profile/' + hospital.hospitalId">
+                                   [routerLink]="'/public/hospital/' + hospital.hospitalId">
                                   View Detail
                                 </a>
                               </div>

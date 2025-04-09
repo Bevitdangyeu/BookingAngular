@@ -12,4 +12,5 @@ export class TopicService {
     findAll(): Observable<TopicModel[]> {
         return this.http.get<TopicModel[]>(this.apiUrl + "public/category/findAll")
     }
+
 }

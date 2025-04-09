@@ -9,6 +9,8 @@ import { ProfileComponent } from './page/public/profile/profileComponent/profile
 import { AuthGuard } from './auth/auth.guard';
 import { AppointmentComponent } from './page/public/appointment/appointment.component';
 import { PostComponent } from './page/admin/post/post.component';
+import { PublicPostComponent } from './page/public/post/publicPost.component';
+import { TopicComponent } from './page/public/topic/topic.component';
 export const routes: Routes = [
     {
         path: 'public',
@@ -20,7 +22,9 @@ export const routes: Routes = [
                 path: 'profile/:id', // định nghĩa Dynamic Route => id sẽ thay đổi theo từng bác sĩ
                 loadChildren: () => import('./page/public/profile/profile.routes').then(m => m.profileRoutes)
             },
-            { path: 'appointment/list', component: AppointmentComponent }
+            { path: 'appointment/list', component: AppointmentComponent },
+            { path: 'post/:id', component: PublicPostComponent },
+            { path: 'topic/:id', component: TopicComponent }
             // lazy loading  chỉ tải profile component khi người dùng truy cập vào /profile
         ],
     },

@@ -10,6 +10,7 @@ import { uploadService } from '../../../services/uploadFile.service';
 import * as bootstrap from 'bootstrap';
 import Swal from 'sweetalert2';
 import { ChangeDetectorRef } from '@angular/core';
+
 @Component({
   selector: 'app-post',
   standalone: true,
@@ -28,8 +29,8 @@ export class PostComponent {
     toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
     readonly: false,
   };
-  // selectedCategory: number = 0;
-  // editorContent: string = '';
+  selectedCategoryId: number = 0;
+  time: string = "";
   imageUploaded: string = "";
   totalPages: number = 0;
   currentPage: number = 0;
@@ -155,6 +156,11 @@ export class PostComponent {
       }
     });
   }
+  resetFilter() {
+    this.selectedCategoryId = 0;
+    this.time = "";
+    this.loadPosts();
+  }
   resetForm() {
     this.postEdit.title = "";
     this.postEdit.content = "";
@@ -224,17 +230,22 @@ export class PostComponent {
     }
   }
   loadPosts() {
-    this.postService.getPostByDoctorId(this.currentPage).subscribe({
-      next: (data) => {
-        this.listPost = data.listPostDTO;
-        this.totalPages = data.totalPages;
-        console.log(" bài viết: " + data.listPostDTO)
-        console.log(" bài viết: " + this.listPost)
-      },
-      error: (error) => {
-        console.log(error)
-      }
-    })
+    // kiểm tra nếu mà ngày và mã topic trống thì gọi getPostByDoctorId
+    if (this.selectedCategoryId === 0 && this.time === "") {
+      this.postService.getPostByDoctorId(this.currentPage).subscribe({
+        next: (data) => {
+          this.listPost = data.listPostDTO;
+          this.totalPages = data.totalPages;
+          console.log(" bài viết: " + data.listPostDTO)
+          console.log(" bài viết: " + this.listPost)
+        },
+        error: (error) => {
+          console.log(error)
+        }
+      })
+    } else {
+      this.filterByCategoryAndDate();
+    }
   }
   editPost(post: PostModel) {
     this.imageUploaded = post.image!;
@@ -302,6 +313,23 @@ export class PostComponent {
       }
     })
   }
+
+  filterByCategoryAndDate() {
+    // lấy  dữ liệu từ bên giao diện
+    const categoryId = this.selectedCategoryId;
+    const date = this.time;
+    this.postService.filterByCategoryAndTime(categoryId, date, this.currentPage).subscribe({
+      next: (data) => {
+        this.listPost = data.listPostDTO;
+        this.totalPages = data.totalPages;
+        console.log(data.listPostDTO);
+      }, error: (error) => {
+        console.log("error")
+      }
+
+    })
+  }
+
   prevPage() {
     if (this.currentPage > 0) {
       this.currentPage--;
