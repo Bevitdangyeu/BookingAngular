@@ -1,0 +1,19 @@
+.date{
+    border-radius: 20px;
+    width: 200px;
+    height: 45px;
+    outline: none;
+    padding: 0px 20px 0px 30px;
+    background-color: #f4f7f9;
+    display: block;
+    border: 1px #a9cce3 solid;
+  }
+  .btnSearch{
+    border-radius: 20px;
+    height: 40px;
+    width: 80px;
+    margin-left: 20px;
+    background-color: #1f618d;
+    color: white;
+    border: 0px;
+  }

@@ -11,6 +11,7 @@ import { AppointmentComponent } from './page/public/appointment/appointment.comp
 import { PostComponent } from './page/admin/post/post.component';
 import { PublicPostComponent } from './page/public/post/publicPost.component';
 import { TopicComponent } from './page/public/topic/topic.component';
+import { AdminAppointmentComponent } from './page/admin/admin-appointment/admin-appointment.component';
 export const routes: Routes = [
     {
         path: 'public',
@@ -33,7 +34,8 @@ export const routes: Routes = [
         component: AdminComponent,
         children: [
             { path: 'home', component: AdminHomeComponent },
-            { path: 'post', component: PostComponent }
+            { path: 'post', component: PostComponent },
+            { path: 'appointment', component: AdminAppointmentComponent }
         ],
         canActivate: [AuthGuard], data: { expectedRole: ['DOCTOR'] }
     },

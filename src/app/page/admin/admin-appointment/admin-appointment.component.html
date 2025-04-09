@@ -1,0 +1,138 @@
+<div class="container mt-3" style="min-width: 700px;">
+  <div style="flex: 1;">
+    <div style="display: block; margin: 20px 20px 20px 20px;">
+      <label for="">TIME</label>
+      <div style="display: flex;">
+        <input type="date" placeholder="Chọn ngày" [(ngModel)]="selectedDate" class="date" />
+        <button class="btnSearch" (click)="loadAppoinment()">
+          Search
+        </button>
+      </div>
+    </div>
+    <!-- Tabs -->
+    <ul class="nav nav-tabs" id="patientTabs">
+      <li class="nav-item" style="cursor: pointer;">
+        <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#Receive">CHỜ XÁC NHẬN</a>
+      </li>
+      <li class="nav-item" style="cursor: pointer;">
+        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#confirmed">ĐÃ DUYỆT</a>
+      </li>
+      <li class="nav-item" style="cursor: pointer;">
+        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#completed">ĐÃ HOÀN THÀNH</a>
+      </li>
+      <li class="nav-item" style="cursor: pointer;">
+        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#cancel">ĐÃ HỦY</a>
+      </li>
+    </ul>
+
+
+
+    <!-- Tab Content -->
+
+    <div class="tab-content mt-3 rounded-2" style="width: 100%;">
+      <!-- Tab Chờ Xác Nhận -->
+      <div class="tab-pane fade show active" style="justify-content: center; text-align: center;" id="Receive">
+        <table class="table table-bordered text-center" style="width: 90%;">
+          <thead class="table-light">
+            <tr>
+              <th> Id</th>
+              <th> Name</th>
+              <th>Phone number</th>
+              <th>Time</th>
+              <th>Doctor</th>
+              <th>Detail</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let lichKham of appointments">
+              <tr *ngIf="lichKham.status=='Pending approval'">
+                <td>{{ lichKham.appointmentId }}</td>
+                <td>{{ lichKham.fullName }}</td>
+                <td>{{ lichKham.phoneNumber}}</td>
+                <td>{{ lichKham.description }}</td>
+                <td>24/11/2020, 20:59 PM</td>
+                <td><button class="btn btn-primary">Detail</button></td>
+                <td>
+                  <!-- (click)="updateStatus(lichKham.datLichId, 'Hủy')" -->
+                  <button class="btn btn-danger"
+                    (click)="updateStatus(lichKham.appointmentId!,'Cancel')">Cancel</button>
+                  <button style="margin-left: 10px;" class="btn btn-primary "
+                    (click)="updateStatus(lichKham.appointmentId!,'Confiemed')">Confirm</button>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Tab Đã Duyệt -->
+      <div class="tab-pane fade" id="confirmed" style="justify-content: center; text-align: center;">
+        <table class="table table-bordered text-center" style="width: 90%;">
+          <thead class="table-light">
+            <tr>
+              <th>ID </th>
+              <th>Name</th>
+              <th>Phone number</th>
+              <th>Time</th>
+              <th>Update</th>
+              <th>Detail</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let lichKham of appointments">
+              <tr *ngIf="lichKham.status=='Confiemed'">
+                <td>{{ lichKham.appointmentId }}</td>
+                <td>{{ lichKham.fullName }}</td>
+                <td>{{ lichKham.phoneNumber }}</td>
+                <td>{{ lichKham.description }}</td>
+                <td>24/11/2020, 20:59 PM</td>
+                <td><button class="btn btn-primary">Detail</button></td>
+                <td><button class="btn btn-primary" (click)="updateStatus(lichKham.appointmentId!,'Done')">Done</button>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Tab Đã Hoàn Thành -->
+      <div class="tab-pane fade" id="completed" style="justify-content: center; text-align: center;">
+        <table class="table table-bordered text-center" style="width: 90%;">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Phone number</th>
+              <th>Time</th>
+              <th>Update</th>
+              <th>Detail</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let lichKham of appointments">
+              <tr *ngIf="lichKham.status=='Done'">
+                <td>{{ lichKham.appointmentId }}</td>
+                <td>{{ lichKham.fullName }}</td>
+                <td>{{ lichKham.phoneNumber }}</td>
+                <td>{{ lichKham.description }}</td>
+                <td>24/11/2020, 20:59 PM</td>
+                <td><button class="btn btn-primary">Detail</button></td>
+                <td *ngIf="lichKham">
+                  <button class="btn btn-primary">Send Bill</button>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Tab Đã Hủy -->
+      <div class="tab-pane fade" id="cancel" style="justify-content: center; text-align: center;">
+        <p>Đã hủy</p>
+      </div>
+    </div>
+  </div>
+</div>
