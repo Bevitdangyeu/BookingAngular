@@ -17,3 +17,90 @@
     color: white;
     border: 0px;
   }
+  .nameImg{
+    display: flex;
+}
+.divImg{
+    margin: 20px;
+}
+.doctorImage{
+    height: 130px;
+    width: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 0px;
+}
+.thongtin{
+    margin: 20px;
+}
+.adress{
+   
+    display: flex;
+}
+.button{
+    border: 0px;
+    background-color: #344767;
+    padding: 5px 20px 5px 20px;
+    border-radius: 20px;
+    color: aliceblue;
+}
+.btnLichKham{
+    border-radius: 8px;
+     border: 0px; 
+     background-color: #d4e6f1;height: 
+     40px;width: 100px;
+     margin:10px;
+}
+.inputInfo{
+    border-radius: 20px;
+    border: 1px #A8A9AD solid;
+    width: 400px;
+    height: 45px; 
+    outline: none;
+    padding-left: 30px;
+    background-color: #f4f7f9;
+    margin-top: 10px;
+}
+.MotaBenh{
+    margin-top: 10px;
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px #A8A9AD solid;
+    outline: none;
+    width: 100%;
+}
+.description{
+    margin-top: 30px;
+}
+.infoDoctor{
+    color:rgb(137, 215, 137);
+    font-weight: bolder;
+}
+.image-overlay {
+  position: fixed;
+  top: 30%;
+  left: 25%;
+  width: 50%;
+  z-index: 1055; /* cao hơn modal Bootstrap (z-index modal là 1050) */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: zoom-out;
+}
+
+.image-overlay img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+  box-shadow: 0 0 15px white;
+}
+.close-btn {
+  position: absolute;
+  top: 0px;
+  right: 50px;
+  font-size: 2rem;
+  color: white;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 900;}

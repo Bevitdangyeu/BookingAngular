@@ -29,7 +29,7 @@
 
     <!-- Tab Content -->
 
-    <div class="tab-content mt-3 rounded-2" style="width: 100%;">
+    <div class="tab-content mt-3 rounded-2" style="width: 100%;min-height: 500px;">
       <!-- Tab Chờ Xác Nhận -->
       <div class="tab-pane fade show active" style="justify-content: center; text-align: center;" id="Receive">
         <table class="table table-bordered text-center" style="width: 90%;">
@@ -38,8 +38,8 @@
               <th> Id</th>
               <th> Name</th>
               <th>Phone number</th>
+              <th>description</th>
               <th>Time</th>
-              <th>Doctor</th>
               <th>Detail</th>
               <th>Actions</th>
             </tr>
@@ -51,8 +51,9 @@
                 <td>{{ lichKham.fullName }}</td>
                 <td>{{ lichKham.phoneNumber}}</td>
                 <td>{{ lichKham.description }}</td>
-                <td>24/11/2020, 20:59 PM</td>
-                <td><button class="btn btn-primary">Detail</button></td>
+                <td>{{ lichKham.time.time }},{{lichKham.date}}</td>
+                <td><button class="btn btn-primary" (click)="loadDetail(lichKham)" data-bs-toggle="modal"
+                    data-bs-target="#bookingModal">Detail</button></td>
                 <td>
                   <!-- (click)="updateStatus(lichKham.datLichId, 'Hủy')" -->
                   <button class="btn btn-danger"
@@ -71,11 +72,11 @@
         <table class="table table-bordered text-center" style="width: 90%;">
           <thead class="table-light">
             <tr>
-              <th>ID </th>
-              <th>Name</th>
+              <th> Id</th>
+              <th> Name</th>
               <th>Phone number</th>
+              <th>description</th>
               <th>Time</th>
-              <th>Update</th>
               <th>Detail</th>
               <th>Actions</th>
             </tr>
@@ -87,8 +88,9 @@
                 <td>{{ lichKham.fullName }}</td>
                 <td>{{ lichKham.phoneNumber }}</td>
                 <td>{{ lichKham.description }}</td>
-                <td>24/11/2020, 20:59 PM</td>
-                <td><button class="btn btn-primary">Detail</button></td>
+                <td>{{ lichKham.time.time}},{{lichKham.date}}</td>
+                <td><button class="btn btn-primary" (click)="loadDetail(lichKham)" data-bs-toggle="modal"
+                    data-bs-target="#bookingModal">Detail</button></td>
                 <td><button class="btn btn-primary" (click)="updateStatus(lichKham.appointmentId!,'Done')">Done</button>
                 </td>
               </tr>
@@ -102,11 +104,11 @@
         <table class="table table-bordered text-center" style="width: 90%;">
           <thead class="table-light">
             <tr>
-              <th>ID</th>
-              <th>Name</th>
+              <th> Id</th>
+              <th> Name</th>
               <th>Phone number</th>
+              <th>description</th>
               <th>Time</th>
-              <th>Update</th>
               <th>Detail</th>
               <th>Actions</th>
             </tr>
@@ -118,8 +120,9 @@
                 <td>{{ lichKham.fullName }}</td>
                 <td>{{ lichKham.phoneNumber }}</td>
                 <td>{{ lichKham.description }}</td>
-                <td>24/11/2020, 20:59 PM</td>
-                <td><button class="btn btn-primary">Detail</button></td>
+                <td>{{lichKham.time.time}},{{lichKham.date}}</td>
+                <td><button class="btn btn-primary" (click)="loadDetail(lichKham)" data-bs-toggle="modal"
+                    data-bs-target="#bookingModal">Detail</button></td>
                 <td *ngIf="lichKham">
                   <button class="btn btn-primary">Send Bill</button>
                 </td>
@@ -131,7 +134,96 @@
 
       <!-- Tab Đã Hủy -->
       <div class="tab-pane fade" id="cancel" style="justify-content: center; text-align: center;">
-        <p>Đã hủy</p>
+        <table class="table table-bordered text-center" style="width: 90%;">
+          <thead class="table-light">
+            <tr>
+              <th> Id</th>
+              <th> Name</th>
+              <th>Phone number</th>
+              <th>description</th>
+              <th>Time</th>
+              <th>Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let lichKham of appointments">
+              <tr *ngIf="lichKham.status=='Cancel'">
+                <td>{{ lichKham.appointmentId }}</td>
+                <td>{{ lichKham.fullName }}</td>
+                <td>{{ lichKham.phoneNumber }}</td>
+                <td>{{ lichKham.description }}</td>
+                <td>{{lichKham.time.time}},{{lichKham.date}}</td>
+                <td><button class="btn btn-primary" (click)="loadDetail(lichKham)" data-bs-toggle="modal"
+                    data-bs-target="#bookingModal">Detail</button></td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bookingModalLabel">BOOKING</h5>
+        <button type="button" class="btn-close" style="background-color: black;" data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+      <div class="row my-auto" style="width: 90%;margin-left: 50px;" id="contact">
+        <div class="col-md-8" style="width: 100%;">
+          <div class="contact-cont">
+            <!-- hiển thị thông tin bác sĩ và thông tin ngày khám -->
+            <h5>THÔNG TIN ĐẶT LỊCH</h5>
+            <div id="infoDatLich">
+              <p>Bác sĩ: <span class="infoDoctor">{{selectedAppointment?.doctor?.userDTO?.fullName}}</span></p>
+              <p>Thời gian: {{selectedAppointment?.time?.time}}, {{selectedAppointment?.date}}</p>
+              <p>Địa chỉ: {{ selectedAppointment?.doctor?.userDTO?.address }}</p>
+            </div>
+            <h5>THÔNG TIN BỆNH NHÂN</h5>
+            <div class="heading-border-light"></div>
+          </div>
+          <div class="row con-form" id="ttBenhNhan" style="width: 100%;">
+            <div class="col-md-12">
+              <input readonly class="inputInfo" type="text" name="full-name" id="fullName"
+                value="{{selectedAppointment?.fullName}}">
+            </div>
+            <div class="col-md-12">
+              <input readonly class="inputInfo" type="text" name="phone-number"
+                value="{{selectedAppointment?.phoneNumber}}" id="phoneNumber">
+            </div>
+            <div class="col-md-12">
+              <input class="inputInfo" type="text" value="{{selectedAppointment?.gmail}}" name="email" id="email"
+                placeholder="Email">
+            </div>
+            <div class="col-md-12">
+              <input readonly class="inputInfo" type="text" value="{{selectedAppointment?.address}}" name="subject"
+                id="addressBN" placeholder="Địa chỉ">
+            </div>
+            <div class="col-md-12">
+              <label style="padding-top: 30px;" for="dob">Ngày tháng năm sinh: </label>
+              <div class="col-md-12">
+                <input readonly class="inputInfo" type="text" value="{{selectedAppointment?.dateOfBirth}}"
+                  name="subject" id="addressBN" placeholder="Địa chỉ">
+              </div>
+            </div>
+            <div class="col-md-12">
+              <textarea readonly class="MotaBenh" id="moTa"
+                placeholder="Mô tả triệu chứng"> {{selectedAppointment?.description}}</textarea></div>
+            <div style="width:100px;margin:10px 0px 10px 0px">
+              <p> Hình ảnh</p>
+              <img (click)="openImageOverlay()" [src]="'http://localhost:8080/uploads/'+selectedAppointment?.image"
+                style="width: 100px; cursor: zoom-in;" id="imagePreview">
+              <div id="imageOverlay" (click)="closeImageOverlay()" class="image-overlay" *ngIf="showImageOverlay">
+                <button class="close-btn" (click)="closeImageOverlay($event)">×</button>
+                <img [src]="'http://localhost:8080/uploads/'+selectedAppointment?.image" alt="Full Image">
+              </div>
+            </div>
+            <p style="color: #edbb99;">Thông tin của bệnh nhân cung cấp sẽ được sử dụng làm hồ sơ khám bệnh, khi
+              điền thông tin</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>

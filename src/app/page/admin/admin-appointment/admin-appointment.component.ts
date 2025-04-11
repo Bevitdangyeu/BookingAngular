@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common'; // sử dụng được ngIf,n
 import { appointmentModel } from '../../../models/appoinment.model';
 import { appointmentService } from '../../../services/appoinment.service';
 import { FormsModule } from '@angular/forms'; // để sử dụng đc ngModel
+import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-admin-appointment',
@@ -11,6 +12,8 @@ import { FormsModule } from '@angular/forms'; // để sử dụng đc ngModel
   styleUrl: './admin-appointment.component.css'
 })
 export class AdminAppointmentComponent {
+  showImageOverlay: boolean = false;
+  selectedAppointment?: appointmentModel;
   appointments: appointmentModel[] = []
   selectedDate: string = "";
   constructor(private appointmentService: appointmentService) { }
@@ -28,6 +31,15 @@ export class AdminAppointmentComponent {
       }
     })
   }
+  openImageModal() {
+    const modalElement = document.getElementById('imageModal');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    } else {
+      console.error('Không tìm thấy phần tử modal!');
+    }
+  }
   updateStatus(id: number, status: string) {
     this.appointmentService.updateStatus(id, status).subscribe({
       next: (data) => {
@@ -43,5 +55,18 @@ export class AdminAppointmentComponent {
         console.log(error);
       }
     })
+  }
+  loadDetail(appointmentModel: appointmentModel) {
+    this.selectedAppointment = appointmentModel;
+  }
+  openImageOverlay() {
+    this.showImageOverlay = true;
+  }
+
+  closeImageOverlay(event?: MouseEvent) {
+    if (event) {
+      event.stopPropagation(); // Ngăn sự kiện click lan ra div ngoài
+    }
+    this.showImageOverlay = false;
   }
 }

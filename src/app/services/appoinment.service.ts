@@ -24,4 +24,7 @@ export class appointmentService {
     updateStatus(id: number, status: string): Observable<{ success: boolean; appointment: appointmentModel }> {
         return this.http.post<{ success: boolean; appointment: appointmentModel }>(this.apiUrl + `doctor/appointment/update/${id}/${status}`, null);
     }
+
+
+
 }
