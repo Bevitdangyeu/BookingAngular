@@ -16,6 +16,12 @@ export class DoctorService {
     }
     // viết hàm lấy thông tin chi tiết của một bác sĩ
     getDoctorDetails(id: number): Observable<DoctorModel> {
-        return this.http.get<DoctorModel>(this.apiUrl + "profile/" + `${id}`)
+        return this.http.get<DoctorModel>(this.apiUrl + `profile/${id}`)
+    }
+    FindDoctorDetails(): Observable<DoctorModel> {
+        return this.http.get<DoctorModel>("http://localhost:8080/doctor/profile")
+    }
+    updateDoctor(doctor: DoctorModel) {
+        return this.http.post<DoctorModel>("http://localhost:8080/doctor/profile/update", doctor);
     }
 }

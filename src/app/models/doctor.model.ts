@@ -8,5 +8,6 @@ export interface DoctorModel {
     star: number;
     description: string;
     phoneNumber: string;
+    shortDescription: string;
     userDTO: userModel;
 }

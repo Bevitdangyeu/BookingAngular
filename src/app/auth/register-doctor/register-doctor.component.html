@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <title>Login Page</title>
+  <title>Register Page</title>
   <link rel="stylesheet" th:href="@{/css/Login.css}">
 </head>
 
@@ -12,9 +12,16 @@
       <img class="doctorimg" src="/assets/public/img/loginImage.jpg" alt="">
     </div>
     <div class="login">
-      <h2>Login</h2>
+      <h2>Register</h2>
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <div>
+          <input class="input" id="email" type="email" placeholder="Nhập email" />
+          <input class="input" id="expertise" type="text" placeholder="Nhập chuyên môn" />
+          <input class="input" id="hospital" type="text" placeholder="Nhập tên bệnh viện" />
+          <input class="input" id="fullName" type="text" formControlName="fullName" placeholder="Nhập họ tên" />
+          <span *ngIf="loginForm.get('fullName')?.invalid && loginForm.get('fullName')?.touched" class="span">
+            Họ tên không được để trống!
+          </span>
           <input class="input" id="username" type="text" formControlName="username" placeholder="Username" />
           <span *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="span">
             Tên đăng nhập không được để trống!
@@ -27,11 +34,10 @@
           </span>
         </div>
         <button class="button" type="submit">
-          {{ isLoading ? 'Đang đăng nhập...' : 'Đăng nhập' }}
+          {{ isLoading ? 'Đang đăng kí...' : 'Đăng kí' }}
         </button>
-        <div>
-          <Span>Bạn chưa có tài khoản?<a [routerLink]="['/register/user']" class="nav-link"> Đăng kí
-              ngay</a></Span>
+        <div style="margin-top: 20px;">
+          <Span>Bạn đã có tài khoản?</Span> <a [routerLink]="['/login']" class="nav-link"> Đăng nhập ngay</a>
         </div>
       </form>
     </div>

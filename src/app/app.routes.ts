@@ -12,6 +12,11 @@ import { PostComponent } from './page/admin/post/post.component';
 import { PublicPostComponent } from './page/public/post/publicPost.component';
 import { TopicComponent } from './page/public/topic/topic.component';
 import { AdminAppointmentComponent } from './page/admin/admin-appointment/admin-appointment.component';
+import { DoctorProfile } from './page/admin/profile/doctor_profile.component';
+import { SearchComponent } from './page/public/search/search.component';
+import { TimeComponent } from './page/admin/time/time.component';
+import { RegisterComponent } from './auth/register/register.component';
+import { RegisterDoctorComponent } from './auth/register-doctor/register-doctor.component';
 export const routes: Routes = [
     {
         path: 'public',
@@ -25,7 +30,9 @@ export const routes: Routes = [
             },
             { path: 'appointment/list', component: AppointmentComponent },
             { path: 'post/:id', component: PublicPostComponent },
-            { path: 'topic/:id', component: TopicComponent }
+            { path: 'topic/:id', component: TopicComponent },
+            { path: 'search/post/:key', component: SearchComponent }
+
             // lazy loading  chỉ tải profile component khi người dùng truy cập vào /profile
         ],
     },
@@ -35,7 +42,9 @@ export const routes: Routes = [
         children: [
             { path: 'home', component: AdminHomeComponent },
             { path: 'post', component: PostComponent },
-            { path: 'appointment', component: AdminAppointmentComponent }
+            { path: 'appointment', component: AdminAppointmentComponent },
+            { path: 'profile', component: DoctorProfile },
+            { path: 'time', component: TimeComponent }
         ],
         canActivate: [AuthGuard], data: { expectedRole: ['DOCTOR'] }
     },
@@ -52,7 +61,21 @@ export const routes: Routes = [
         component: LoginComponent,
         children: [
         ]
+    },
+    {
+        path: 'register/user',
+        component: RegisterComponent,
+        children: [
+
+        ]
+    }, {
+        path: 'register/doctor',
+        component: RegisterDoctorComponent,
+        children: [
+
+        ]
     }
+
 ];
 @NgModule({
     imports: [RouterModule.forRoot(routes)], // cấu hình đây là modul chính của ứng dụng 

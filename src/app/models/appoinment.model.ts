@@ -15,5 +15,6 @@ export interface appointmentModel {
     date: Date,
     time: timeModel;
     doctor: DoctorModel;
-    reviewed: boolean
+    reviewed: boolean;
+    idUser?: number;
 }

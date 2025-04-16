@@ -135,12 +135,12 @@
                   <i class="fa-regular fa-circle-xmark" style="background-color: #ccc;border-radius: 30px;"></i>
                 </button>
                 <img [src]="imageUrl" style="width: 100px;margin-bottom:20px ;" id="imagePreview">
-                <!-- Hiển thị hình ảnh -->
-                <div *ngIf="postEdit.image" style="position: relative; display: inline-block; margin-right: 10px;">
+                <!-- Hiển thị hình ảnh được lấy lên từ bài post nếu bài đó có hình ảnh-->
+                <!-- <div *ngIf="postEdit.image" style="position: relative; display: inline-block; margin-right: 10px;">
                   <button class="btnDelImg" (click)="deleteImg()">
                     <i class="fa-regular fa-circle-xmark" style="background-color: #ccc;border-radius: 30px;"></i>
                   </button>
-                </div>
+                </div> -->
               </div>
               <input [disabled]="isDisabled" style="display: none;" type="file" id="fileInput"
                 (change)="previewImage($event)">

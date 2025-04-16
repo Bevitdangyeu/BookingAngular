@@ -1,0 +1,14 @@
+<div class="container">
+  <h3>Thêm thời gian khám cho bác sĩ</h3>
+  <div class="form-group">
+    <label for="time">Chọn thời gian khám:</label>
+    <div *ngFor="let time of times">
+      <label>
+        <input type="checkbox" [checked]="isSelected(time)" (change)="onToggle(time, $event)" />
+        {{ time.time }}
+      </label>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" (click)="updateDoctorTimes()">Cập nhật thời gian</button>
+</div>

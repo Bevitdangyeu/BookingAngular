@@ -20,6 +20,9 @@ import { reviewsSevice } from '../../../../services/reviews.servicel';
 import { ChangeDetectorRef } from '@angular/core';
 import { WebSocketService } from '../../../../services/websocket.service';
 import { reviewReplies } from '../../../../models/ReviewReplies.model';
+import { jwtDecode } from 'jwt-decode';
+import { jwtPayloadd } from '../../../../services/jwtPayloadd.service'
+
 @Component({
   selector: 'app-profile',
   imports: [RouterModule, CommonModule],
@@ -170,7 +173,23 @@ export class ProfileComponent {
       reader.readAsDataURL(file); // Chuyển file thành base64
     }
   }
-  bookingClick() {
+  async bookingClick() {
+    const token = localStorage.getItem("accessToken");
+    let userIdFromToken: number | undefined = undefined;
+    console.log("token khi đặt lịch: " + token);
+    if (token) {
+      try {
+        const decoded = jwtDecode<jwtPayloadd>(token);
+        console.log("vào giải mã token: " + token);
+        userIdFromToken = decoded.id;
+        console.log("Thông tin user:", decoded);
+      } catch (err) {
+        console.error("Không thể decode token:", err);
+      }
+    } else {
+      userIdFromToken = 0;
+    }
+    const imageUrl = await this.uploadImage();
     const appointment: appointmentModel = {
       fullName: (document.getElementById("fullName") as HTMLInputElement).value,
       phoneNumber: (document.getElementById("phoneNumber") as HTMLInputElement).value,
@@ -184,11 +203,11 @@ export class ProfileComponent {
       dateOfBirth: (document.getElementById("dob") as HTMLInputElement).value,
       description: (document.getElementById("moTa") as HTMLTextAreaElement).value,
       sex: (1),
-      image: this.uploadFile(),
+      image: imageUrl,
       doctor: this.doctor,
       date: this.selectDate,
-      reviewed: false
-
+      reviewed: false,
+      idUser: userIdFromToken
     }
     // gọi đến service upload
     this.appointmentService.addApponintment(appointment).subscribe({
@@ -217,7 +236,7 @@ export class ProfileComponent {
           backdrop.remove();
         });
         console.log("Đặt lịch thành công:", response);
-        this.router.navigate(['/public/Appoinment']);
+        //this.router.navigate(['/public/Appoinment']);
       },
       error: (error) => {
         Swal.fire({
@@ -238,27 +257,28 @@ export class ProfileComponent {
     });
     console.log(appointment);
   }
-  uploadFile(): String {
-    const fileInput = document.getElementById("fileInput") as HTMLInputElement;
-    if (!fileInput.files || fileInput.files.length === 0) {
-      console.warn("Chưa chọn file!");
-      return "";
-    }
-    const selectedFile = fileInput.files[0];
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-    this.uploadService.uploadFile(formData).subscribe({
-      next: (response) => {
-        console.log("Upload thành công:", response.fileName);
-        return response.fileName;
-      },
-      error: (error) => {
-        console.error("Upload ảnh thất bại:", error);
-
+  uploadImage(): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+      if (!fileInput.files || fileInput.files.length === 0) {
+        resolve(""); // Trả về rỗng nếu không có file
+        return;
       }
+      const selectedFile = fileInput.files[0];
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      this.uploadService.uploadFile(formData).subscribe({
+        next: (response) => {
+          console.log("Upload thành công:", response.fileName);
+          resolve(response.fileName);
+        },
+        error: (error) => {
+          console.error("Upload ảnh thất bại:", error);
+          reject("");
+        }
 
+      });
     });
-    return "";
   }
   showReplyBox(reviewId: number, status: number) {
     console.log('replyVisibility:', this.replyVisibility);

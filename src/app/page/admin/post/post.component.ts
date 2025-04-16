@@ -254,6 +254,7 @@ export class PostComponent {
     this.postEdit.category.categoryId = post.category.categoryId;
     this.postEdit.content = post.content
     this.imageUrl = "http://localhost:8080/uploads/" + post.image || null;
+    // nếu có image thì disable, còn null thì k d
     this.checkImageStatus();
     let bookingModal = document.getElementById("AddPostModel");
     if (bookingModal) {

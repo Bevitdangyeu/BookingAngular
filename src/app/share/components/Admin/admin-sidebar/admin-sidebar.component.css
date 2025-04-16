@@ -6,4 +6,10 @@
     border-radius: 40px !important;
     height: 100px;
   }
+.menu:hover{
+    background-color: rgb(186, 199, 211);
+    border-radius: 15px;
+    
+}
+
   

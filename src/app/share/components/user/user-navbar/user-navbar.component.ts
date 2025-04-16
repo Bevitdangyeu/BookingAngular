@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-user-navbar',
   imports: [RouterModule],
@@ -7,5 +8,10 @@ import { RouterModule } from '@angular/router';
   styleUrl: './user-navbar.component.css'
 })
 export class UserNavbarComponent {
-
+  constructor(private router: Router) { }
+  onSearch(keyword: string) {
+    if (keyword && keyword.trim()) {
+      this.router.navigate([`/public/search/post/`, keyword]);
+    }
+  }
 }

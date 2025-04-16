@@ -16,8 +16,8 @@
             <div class="text-muted fst-italic mb-2">Tác giả: Bác sĩ
               <span>{{post.doctorDTO?.userDTO?.fullName}}</span></div>
             <!-- Post categories-->
-            <a class="badge bg-secondary text-decoration-none link-light" href="#!"
-              th:text="${post.category.nameCategory}"></a>
+            <a class="badge bg-secondary text-decoration-none link-light"
+              [routerLink]="'/topic/' + post.category.categoryId">{{post.category.categoryName}}</a>
             <button style="height: 30px;width: 70px;border-radius: 10px;border: none;background-color: cornflowerblue;">
               <i class="fa-solid fa-thumbs-up" style="color: white;margin-right: 10px;"></i><span>{{post.like}}</span>
             </button>

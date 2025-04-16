@@ -1,0 +1,61 @@
+<div class="container">
+  <div class="main-containt">
+    <div class="form-group mb-3">
+      <label>Họ tên:</label>
+      <input class="form-control" name="fullName" [(ngModel)]="doctor.userDTO.fullName" required />
+    </div>
+
+    <label for="fileInput" style="
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      color: #555;
+      background-color: #f9f9f9;
+      transition: background-color 0.3s, border-color 0.3s;">
+
+      <img src="assets/public/img/photo.png" alt="icon" style="width: 24px; height: 24px; margin-right: 8px;">
+      Ảnh/video
+    </label>
+    <img style="width: 60px;" id="imagePreview">
+    <div class="d-flex">
+      <!-- nếu imageURL này có giá trị=>thêm ảnh mới  -->
+      <div *ngIf="imageUrl" style="position: relative; display: inline-block; margin-right: 10px;">
+        <button class="btnDelImg" (click)="deleteImg()">
+          <i class="fa-regular fa-circle-xmark" style="background-color: #ccc;border-radius: 30px;"></i>
+        </button>
+        <img [src]="imageUrl" style="width: 100px;margin-bottom:20px ;" id="imagePreview">
+      </div>
+      <input [disabled]="isDisabled" style="display: none;" type="file" id="fileInput" (change)="previewImage($event)">
+    </div>
+
+    <div class="form-group mb-3">
+      <label>Địa chỉ:</label>
+      <input class="form-control" name="address" [(ngModel)]="doctor.userDTO.address" />
+    </div>
+
+    <div class="form-group mb-3">
+      <label>Email:</label>
+      <input type="email" class="form-control" name="email" [(ngModel)]="doctor.userDTO.email" />
+    </div>
+
+    <div class="col-md-12">
+      <label>Mô tả ngắn:</label>
+      <editor [(ngModel)]="doctor.shortDescription" [init]="editorConfig"
+        apiKey="hzqvekar7x08uycop3yi0u1uszhrv4brvjndfxblep0evjcq">
+      </editor>
+    </div>
+
+    <div class="col-md-12">
+      <label>Mô tả :</label>
+      <editor [(ngModel)]="doctor.description" [init]="editorConfig"
+        apiKey="hzqvekar7x08uycop3yi0u1uszhrv4brvjndfxblep0evjcq">
+      </editor>
+    </div>
+    <button (click)="updateDoctor(doctor)" class="btn btn-primary">Lưu thông tin</button>
+  </div>
+</div>

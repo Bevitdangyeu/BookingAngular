@@ -30,4 +30,8 @@ export class PostService {
     findByTopic(id: number, page: number) {
         return this.http.get<PagebleModel>(this.apiUrl + `public/post/category/${id}/${page}`)
     }
+    findByKey(key: string): Observable<PostModel[]> {
+        const normalizedKey = key.normalize('NFC');
+        return this.http.get<PostModel[]>(this.apiUrl + `public/post/findByKey/${normalizedKey}`)
+    }
 }
