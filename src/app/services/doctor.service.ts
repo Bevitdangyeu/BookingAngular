@@ -21,7 +21,10 @@ export class DoctorService {
     FindDoctorDetails(): Observable<DoctorModel> {
         return this.http.get<DoctorModel>("http://localhost:8080/doctor/profile")
     }
-    updateDoctor(doctor: DoctorModel) {
+    updateDoctor(doctor: DoctorModel): Observable<DoctorModel> {
         return this.http.post<DoctorModel>("http://localhost:8080/doctor/profile/update", doctor);
+    }
+    addDoctor(doctor: DoctorModel): Observable<DoctorModel> {
+        return this.http.post<DoctorModel>("http://localhost:8080/public/doctor/add", doctor);
     }
 }

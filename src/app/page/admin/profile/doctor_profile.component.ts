@@ -34,7 +34,7 @@ export class DoctorProfile {
   loadDoctor() {
     this.doctorService.FindDoctorDetails().subscribe({
       next: (data) => {
-        this.imageUploaded = data.userDTO.image;
+        this.imageUploaded = data.userDTO.image!;
         this.doctor = data;
         this.imageUrl = "http://localhost:8080/uploads/" + data.userDTO.image;
         this.checkImageStatus();

@@ -1,8 +1,8 @@
 export interface userModel {
     idUser?: number;
     fullName: string;
-    email: string;
-    image: string;
+    email?: string;
+    image?: string;
     role?: string;
     fileName?: string;
     username: string;

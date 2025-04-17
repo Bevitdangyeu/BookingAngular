@@ -15,6 +15,8 @@ import Swal from 'sweetalert2';
   styleUrl: './appointment.component.css'
 })
 export class AppointmentComponent {
+  showImageOverlay: boolean = false;
+  selectedAppointment?: appointmentModel;
   appointments: appointmentModel[] = []
   idAppointment: number | undefined = 0;
   doctor: string = "";
@@ -101,5 +103,32 @@ export class AppointmentComponent {
 
     });
 
+  }
+  updateStatus(appointmentId: number) {
+    this.appointmentService.cancelAppointment(appointmentId, "Cancel").subscribe({
+      next: (data) => {
+        const index = this.appointments.findIndex(a => a.appointmentId == appointmentId)
+        if (index != -1) {
+          this.appointments[index] = data.appointment;
+        }
+      }, error: (error) => {
+        console.log(error);
+      }
+    })
+  }
+  loadDetail(appointmentModel: appointmentModel) {
+    console.log("Lịch hẹn" + appointmentModel.address);
+    console.log("Lịch hẹn" + appointmentModel.email);
+    this.selectedAppointment = appointmentModel;
+  }
+  openImageOverlay() {
+    this.showImageOverlay = true;
+  }
+
+  closeImageOverlay(event?: MouseEvent) {
+    if (event) {
+      event.stopPropagation(); // Ngăn sự kiện click lan ra div ngoài
+    }
+    this.showImageOverlay = false;
   }
 }

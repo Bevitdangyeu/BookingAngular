@@ -14,31 +14,40 @@
     <div class="login">
       <h2>Register</h2>
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <div>
-          <input class="input" id="email" type="email" placeholder="Nhập email" />
-          <input class="input" id="expertise" type="text" placeholder="Nhập chuyên môn" />
-          <input class="input" id="hospital" type="text" placeholder="Nhập tên bệnh viện" />
-          <input class="input" id="fullName" type="text" formControlName="fullName" placeholder="Nhập họ tên" />
-          <span *ngIf="loginForm.get('fullName')?.invalid && loginForm.get('fullName')?.touched" class="span">
-            Họ tên không được để trống!
-          </span>
-          <input class="input" id="username" type="text" formControlName="username" placeholder="Username" />
-          <span *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="span">
-            Tên đăng nhập không được để trống!
-          </span>
+        <div style="display: flex; gap: 20px;">
+          <!-- Cột 1 -->
+          <div style="flex: 1;">
+            <input class="input" id="expertise" type="text" placeholder="Chuyên môn" formControlName="expertise" />
+
+            <input class="input" id="experience" type="number" placeholder="Kinh nghiệm (năm)"
+              formControlName="experience" />
+
+            <input class="input" id="hospital" type="text" placeholder="Bệnh viện" formControlName="hospital" />
+            <input class="input" id="fullName" type="text" placeholder="Họ tên" formControlName="fullName" />
+            <span *ngIf="loginForm.get('fullName')?.invalid && loginForm.get('fullName')?.touched" class="span">
+              Họ tên không được để trống!
+            </span>
+
+          </div>
+
+          <!-- Cột 2 -->
+          <div style="flex: 1;">
+            <input class="input" id="username" type="text" placeholder="Username" formControlName="username" />
+            <span *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="span">
+              Tên đăng nhập không được để trống!
+            </span>
+
+            <input class="input" id="password" type="password" placeholder="Password" formControlName="password" />
+            <span *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="span">
+              Mật khẩu không được để trống!
+            </span>
+
+            <input class="input" id="phoneNumber" type="text" placeholder="Số điện thoại"
+              formControlName="phoneNumber" />
+            <input class="input" id="address" type="text" placeholder="Địa chỉ" formControlName="address" />
+          </div>
         </div>
-        <div>
-          <input class="input" id="password" type="password" formControlName="password" placeholder="Password" />
-          <span *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="span">
-            Mật khẩu không được để trống!
-          </span>
-        </div>
-        <button class="button" type="submit">
-          {{ isLoading ? 'Đang đăng kí...' : 'Đăng kí' }}
-        </button>
-        <div style="margin-top: 20px;">
-          <Span>Bạn đã có tài khoản?</Span> <a [routerLink]="['/login']" class="nav-link"> Đăng nhập ngay</a>
-        </div>
+        <button type="submit" class="button">Đăng kí</button>
       </form>
     </div>
   </div>

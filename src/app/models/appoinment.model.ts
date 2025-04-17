@@ -6,7 +6,7 @@ export interface appointmentModel {
     sex: number;
     phoneNumber: String;
     address: String;
-    gmail: String;
+    email: String;
     description: String;
     status?: String;
     image: String;

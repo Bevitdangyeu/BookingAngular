@@ -193,7 +193,7 @@ export class ProfileComponent {
     const appointment: appointmentModel = {
       fullName: (document.getElementById("fullName") as HTMLInputElement).value,
       phoneNumber: (document.getElementById("phoneNumber") as HTMLInputElement).value,
-      gmail: (document.getElementById("email") as HTMLInputElement).value,
+      email: (document.getElementById("email") as HTMLInputElement).value,
       time: {
         timeId: Number((document.getElementById("Thoigiankham") as HTMLButtonElement).value),
         hide: 1,
