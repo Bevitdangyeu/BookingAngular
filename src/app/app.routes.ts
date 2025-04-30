@@ -17,6 +17,7 @@ import { SearchComponent } from './page/public/search/search.component';
 import { TimeComponent } from './page/admin/time/time.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { RegisterDoctorComponent } from './auth/register-doctor/register-doctor.component';
+import { StatisticalComponent } from './page/admin/statistical/statistical.component';
 export const routes: Routes = [
     {
         path: 'public',
@@ -44,7 +45,8 @@ export const routes: Routes = [
             { path: 'post', component: PostComponent },
             { path: 'appointment', component: AdminAppointmentComponent },
             { path: 'profile', component: DoctorProfile },
-            { path: 'time', component: TimeComponent }
+            { path: 'time', component: TimeComponent },
+            { path: 'statistical', component: StatisticalComponent }
         ],
         canActivate: [AuthGuard], data: { expectedRole: ['DOCTOR'] }
     },
@@ -78,7 +80,11 @@ export const routes: Routes = [
 
 ];
 @NgModule({
-    imports: [RouterModule.forRoot(routes)], // cấu hình đây là modul chính của ứng dụng 
-    exports: [RouterModule] // xuất để sử dụng tại các modul khác 
+    imports: [
+        RouterModule.forRoot(routes, {
+            scrollPositionRestoration: 'enabled'
+        })
+    ],
+    exports: [RouterModule]
 })
 export class AppRoutingModule { }
