@@ -22,10 +22,10 @@ import { WebSocketService } from '../../../../services/websocket.service';
 import { reviewReplies } from '../../../../models/ReviewReplies.model';
 import { jwtDecode } from 'jwt-decode';
 import { jwtPayloadd } from '../../../../services/jwtPayloadd.service'
-
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-profile',
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, FormsModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
@@ -41,6 +41,8 @@ export class ProfileComponent {
   selectDate: Date = new Date();
   replyVisibility: { [key: number]: boolean } = {};
   reviewsReplies: reviewReplies[] = [];
+  editingReviewIdMap: { [key: number]: boolean } = {};
+  originalReviewTextMap: { [key: number]: string } = {};
   constructor(private route: ActivatedRoute,
     private doctorService: DoctorService,
     private timeService: TimeService,
@@ -56,9 +58,6 @@ export class ProfileComponent {
   ngOnInit(): void {
     this.loadDetailDoctor();
     this.generateNext7Days();
-    // đăng kí nhận revierw 
-    // this.socket.subscribeReviewsToDoctor(this.doctor.idDoctor);
-
   }
 
   ngOnDestroy(): void {
@@ -83,7 +82,15 @@ export class ProfileComponent {
         this.socket.subscribeReviewsToDoctor(this.doctor.idDoctor);
         // Lắng nghe sự kiện cập nhật review
         this.socket.getReview().subscribe(newReview => {
-          this.reviews = [newReview, ...this.reviews];//thay đổi tham chiếu để UI tự động cập nhật
+          // khi nhận được review mới, kiểm tra xem review đã tồn tại chưa 
+          const index = this.reviews.findIndex(r => r.reviewsId === newReview.reviewsId);
+          if (index !== -1) {
+            // Review đã tồn tại → cập nhật nội dung
+            this.reviews[index] = { ...this.reviews[index], ...newReview };
+          } else {
+            // Review mới → thêm vào đầu danh sách,thay đổi tham chiếu để UI tự động cập nhật
+            this.reviews = [newReview, ...this.reviews];
+          }
           this.cdr.detectChanges(); // Cập nhật giao diện khi có dữ liệu mới
         });
       },
@@ -112,6 +119,12 @@ export class ProfileComponent {
       {
         next: (data) => {
           this.reviews = data
+          this.reviews.forEach(review => {
+            if (review.reviewsId != null) {
+              this.editingReviewIdMap[review.reviewsId] = false
+              this.originalReviewTextMap[review.reviewsId] = review.content;
+            }
+          })
           console.log(this.reviews)
         },
         error: (error) => {
@@ -312,18 +325,16 @@ export class ProfileComponent {
     }
   }
   getReplyBox(reviewId: number) {
-    this.socket.subscribeRepliesToDoctor(reviewId);
+    this.socket.subscribeRepliesToDoctor(reviewId);  // sẽ không đăng ký trùng
+
     this.socket.getReplies().subscribe(newReplies => {
-      console.log("Nhận được reply: " + newReplies)
       const review = this.reviews.find(r => r.reviewsId === newReplies.reviews!.reviewsId);
+
       if (review && review.showReplies == true) {
-        // Kiểm tra nếu reply đã tồn tại trước khi thêm
-        if (!review.replies!.some(r => r.idReviewReplies !== newReplies.idReviewReplies)) {
-          console.log("📥 Nhận reply mới:", newReplies);
+        // Nếu chưa có reply này thì thêm
+        if (!review.replies!.some(r => r.idReviewReplies === newReplies.idReviewReplies)) {
           review.replies = [newReplies, ...review.replies!];
         }
-        console.log("Nhận được reply: " + newReplies)
-        review.replies = [newReplies, ...review.replies!];// thay đổi tham chiếu để có thể cập nhật giao diện
       }
     });
     this.reviewService.findReplies(reviewId).subscribe({
@@ -351,7 +362,72 @@ export class ProfileComponent {
         start: star
       }
     }
-    this.socket.sendReviewReplies(replies)
+    this.socket.sendReviewReplies(replies);
+    (document.getElementById("inputReplies" + reviewId) as HTMLInputElement).value = ""
+  }
+  getUserId(): number {
+    //lấy token từ localStorge
+    const token = localStorage.getItem("accessToken");
+    let userIdFromToken;
+    if (token) {
+      try {
+        const decoded = jwtDecode<jwtPayloadd>(token);
+        userIdFromToken = decoded.id ?? 0;
+        return userIdFromToken;
+      } catch (err) {
+        console.error("Không thể decode token:", err);
+      }
+    }
+    return 0;
+  }
+  // hàm này được gọi tự động để kiểm tra xem nút sửa có đang được kích hoạt hay không(có đang sửa hay không)
+  // nếu không thì nội dung của cmt sẽ là readonly
+  isEditing(reviewId: number): boolean {
+    return this.editingReviewIdMap[reviewId] === true;
+  }
+  // hàm này dùng để thay đổi trạng thái của cmt đó trong editingReviewIdMap=> nếu nhấn vào thì hiện thị sửa, nhấn vào nữa thì lưu
+  toggleEdit(reviewId: number, inputElement: HTMLInputElement): void {
+    const isNowEditing = !this.editingReviewIdMap[reviewId];
+    this.editingReviewIdMap[reviewId] = isNowEditing;
+
+    if (isNowEditing) {
+      setTimeout(() => {
+        inputElement.focus();
+        inputElement.select(); // nếu muốn bôi đen luôn nội dung
+      });
+    }
+  }
+  updateReview(reviewId: number, review: reviewModel, inputElement: HTMLInputElement) {
+    if (!this.isEditing(reviewId)) {
+      // Bắt đầu sửa
+      this.editingReviewIdMap[reviewId] = true;
+      // Đợi input render xong rồi focus (nếu cần)
+      setTimeout(() => {
+        inputElement.focus();
+        inputElement.select();
+      });
+    } else {
+      // Lưu thay đổi
+      this.saveReview(review);
+      this.editingReviewIdMap[reviewId] = false;
+    }
+  }
+  saveReview(review: reviewModel) {
+    console.log(review)
+    this.reviewService.update(review).subscribe({
+      next: (response) => {
+        console.log("Cập nhật review thành công:", response);
+      },
+      error: (err) => {
+        console.error("Lỗi khi cập nhật review:", err);
+      }
+    });;
+  }
+  cancelEdit(reviewId: number, inputElement: HTMLInputElement) {
+    this.editingReviewIdMap[reviewId] = false;
+    // Khôi phục lại nội dung ban đầu
+    // Dùng đối tượng reviewInput để set lại giá trị nội dung ban đầu
+    inputElement.value = this.originalReviewTextMap[reviewId];
   }
 }
 

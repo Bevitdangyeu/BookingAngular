@@ -16,6 +16,9 @@ export class reviewsSevice {
         // sendreview sẽ trả về đối tượng được thêm ResponseEntity<Map<String,String>>
         return this.websocketService.sendReview(review);
     }
+    update(review: reviewModel): Observable<any> {
+        return this.websocketService.updateReview(review);
+    }
     findByDoctor(id: number): Observable<reviewModel[]> {
         console.log('id ' + id);
         return this.http.get<reviewModel[]>(this.apiUrl + "public/getReviews/" + `${id}`);

@@ -89,29 +89,33 @@
                   <i style="background-color:transparent;color: #a9cce3;margin-left: 20px;" class="fa fa-check-circle" aria-hidden="true"></i>
                   <span style="color: #b2babb;margin-left: 10px;" >Đã khám vào {{ review.appointment?.date }}</span>
                 </div>
-                <p style="margin: 0px 0px 0px 10px;">{{review.content}}</p>
+                <!-- <p style="margin: 0px 0px 0px 10px;">{{review.content}}</p> -->
+                <input
+                  [ngClass]="{
+                    'input-readonly': !isEditing(review.reviewsId!),
+                    'input-editable': isEditing(review.reviewsId!)
+                  }"
+                  #reviewInput
+                  type="text"
+                  [(ngModel)]="review.content"
+                  [readonly]="!isEditing(review.reviewsId!)"
+                  style="border: none; background-color: transparent;" />
                 <div style="display: flex;">
                   <p style="margin-left: 10px;color: #bdc7cd;" >{{review.createAt | date: 'yyyy-MM-dd HH:mm'}}</p>
-                  <button
+                  <button *ngIf="getUserId()!==review.user?.idUser"
                   style="border: 0px;height:10px;color: #6d6d6d;background-color: transparent;margin-left: 10px;"
                   class="reply-button" (click)="showReplyBox(review.reviewsId!,1)">Trả lời</button>
+                  <button *ngIf="getUserId()===review.user?.idUser"
+                  style="border: 0px;height:10px;color: #6d6d6d;background-color: transparent;margin-left: 10px;padding: 0;"
+                   (click)="updateReview(review.reviewsId!,review,reviewInput)"> {{ isEditing(review.reviewsId!) ? 'Lưu' : 'Sửa' }}</button>
+                   <!-- Hiển thị nút hủy nếu isEditing là true -->
+                  <button *ngIf="isEditing(review.reviewsId!)" 
+                  style="border: 0px;height:10px;color: #6d6d6d;background-color: transparent;margin-left: 10px;padding: 0;"
+                  class="cancel-button" (click)="cancelEdit(review.reviewsId!,reviewInput)"
+                  >Hủy</button>
                   <button
-                  style="border: 0px;height:10px;color: #6d6d6d;background-color: transparent;margin-left: 10px;"
+                  style="border: 0px;height:10px;color: #6d6d6d;background-color: transparent;margin-left: 10px;padding: 0;"
                   class="reply-button" (click)="getReplyBox(review.reviewsId!)">Xem các câu trả lời</button>
-                </div>
-                <div class="reply-box" *ngIf="replyVisibility[review.reviewsId!]==true">
-                    <textarea
-                    style="border-radius: 20px;width: 300px; height:40px;outline: none; border: 1px dashed ;padding-left: 20px;margin-left: 30px;"
-                    class="reply-text" id="inputReplies{{review.reviewsId}}" placeholder="Nhập câu trả lời..."></textarea>
-                  <div style="margin-left: 30px;">
-                    <button (click)="senReplies(review.reviewsId!,review.content,review.start)"
-                    style="border-radius: 8px; border: 0px; background-color: #d4e6f1;height: 35px;width: 50px;margin-top:10px;"
-                    class="send-reply">Gửi
-                    </button>
-                    <button (click)="showReplyBox(review.reviewsId!,0)"
-                    style="border-radius: 8px; border: 0px; background-color: #d4e6f1;height: 35px;width: 50px;margin-top:10px;margin-left: 10px;"
-                    class="send-reply">Hủy</button>
-                  </div>
                 </div>
                 <!-- danh sách các câu trả lời -->
                 <div  *ngIf="review.showReplies">
@@ -121,12 +125,32 @@
                       <!-- tên -->
                       <span  style="font-weight: bold;margin: 0px 0px 0px 10px;">{{reply.user!.fullName}}</span>
                       <p style="margin: 0px 0px 0px 10px;">{{reply.content}}</p>
+                      <div style="display: flex;">
+                         <p style="margin: 0px 0px 0px 10px;color: #6d6d6d;">{{ reply.createAt | date:'dd-MM-yyyy HH:mm:ss' }}</p>
+                     <button
+                  style="border: 0px;height:10px;color: #6d6d6d;background-color: transparent;margin-left: 10px;padding: 0;"
+                  class="reply-button" (click)="showReplyBox(review.reviewsId!,1)">Trả lời</button>
+                      </div>
                       <!-- <button
                       style="border: 0px;height:10px;color: #6d6d6d;background-color: transparent;margin-left: 10px;"
                       class="reply-button" (click)="showReplyBox(review.reviewsId!,1)">Trả lời</button> -->
                     </div>
                   </div>
                 </div>
+                <div class="reply-box" *ngIf="replyVisibility[review.reviewsId!]==true">
+                  <textarea
+                  style="border-radius: 20px;width: 300px; height:40px;outline: none; border: 1px dashed ;padding-left: 20px;"
+                  class="reply-text" id="inputReplies{{review.reviewsId}}" placeholder="Nhập câu trả lời..."></textarea>
+                <div>
+                  <button (click)="senReplies(review.reviewsId!,review.content,review.start)"
+                  style="border-radius: 8px; border: 0px; background-color: #d4e6f1;height: 35px;width: 50px;margin-top:10px;"
+                  class="send-reply">Gửi
+                  </button>
+                  <button (click)="showReplyBox(review.reviewsId!,0)"
+                  style="border-radius: 8px; border: 0px; background-color: #d4e6f1;height: 35px;width: 50px;margin-top:10px;margin-left: 10px;"
+                  class="send-reply">Hủy</button>
+                </div>
+              </div>
               </div>
             </div>
           </div>

@@ -29,10 +29,9 @@ export class LoginComponent {
     else {
       this.authService.login(this.loginForm.value).subscribe({
         next: (response: AuthenticationResponse) => {
-          // Lưu token vào localStorage (nếu cần)
+          // Lưu token vào localStorage
           localStorage.setItem('accessToken', response.accessToken);
           localStorage.setItem('refreshToken', response.refreshToken);
-          // Chuyển hướng dựa trên vai trò (nếu cần)
           if (response.role === 'ADMIN') {
             // Chuyển hướng admin
             this.router.navigate(['/admin/home']);

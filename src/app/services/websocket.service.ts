@@ -13,7 +13,7 @@ import { AuthServiceComponent } from "../core/services/auth-service.component";
 export class WebSocketService {
     private stompClient!: Client;
     private reviewSubscription: StompSubscription | null = null;
-    private replySubscription: StompSubscription | null = null;
+    private replySubscriptions: Map<number, StompSubscription> = new Map();
     private tokenSubscription: StompSubscription | null = null;
     private pendingMessages: any[] = []; // Lưu trữ yêu cầu WebSocket chưa gửi
     private reviewSubject = new BehaviorSubject<reviewModel | null>(null);
@@ -28,7 +28,6 @@ export class WebSocketService {
 
     private async initWebSocket() {
         if (this.stompClient && this.stompClient.active) {
-            console.log("Đóng kết nối cũ trước khi mở kết nối mới...");
             await this.stompClient.deactivate(); // Đóng kết nối cũ
         }
 
@@ -55,37 +54,27 @@ export class WebSocketService {
         };
 
         this.stompClient.onStompError = (frame) => {
-            console.error("Broker reported error: " + frame.headers["message"]);
-            console.error("Additional details: " + frame.body);
         };
         console.log("kết nối websocket thành công");
         this.stompClient.activate();
     }
-    private retryPendingMessages(token: string) {
-        while (this.pendingMessages.length > 0) {
-            const review = this.pendingMessages.shift();
-            this.sendReview(review); // Gửi lại yêu cầu bị chặn
-        }
+    // đảm bảo websocket được kết nối thành công
+    private ensureWebSocketConnected(): Promise<void> {
+        return new Promise((resolve) => {
+            if (this.stompClient && this.stompClient.connected) {
+                resolve();
+            } else {
+                console.log("Chờ WebSocket kết nối...");
+                const interval = setInterval(() => {
+                    if (this.stompClient && this.stompClient.connected) {
+                        clearInterval(interval);
+                        resolve();
+                    }
+                }, 500);
+            }
+        });
     }
-    private refreshTokenAndRetry(): Observable<boolean> {
-        return this.auth.refreshToken().pipe(
-            tap((response) => {
-                if (response && response.accessToken) {
-                    console.log("Token mới đã được lấy");
-                    localStorage.setItem('accessToken', response.accessToken);
-                    localStorage.setItem('Authorization-Refresh', response.refreshToken)
-                    this.retryPendingMessages(response.accessToken); // Gửi lại các tin nhắn chờ
-                } else {
-                    console.error("Không thể làm mới token: Response không hợp lệ");
-                }
-            }),
-            map(response => !!response && !!response.accessToken), // Trả về true nếu refresh thành công
-            catchError((error) => {
-                console.error("Không thể làm mới token:", error);
-                return of(false);
-            })
-        );
-    }
+
     // chờ đợi sau khi websocket kết nối xong
     async subscribeReviewsToDoctor(doctorId: number) {
         await this.ensureWebSocketConnected();
@@ -111,38 +100,28 @@ export class WebSocketService {
         });
     }
 
-    private ensureWebSocketConnected(): Promise<void> {
-        return new Promise((resolve) => {
-            if (this.stompClient && this.stompClient.connected) {
-                resolve();
-            } else {
-                console.log("Chờ WebSocket kết nối...");
-                const interval = setInterval(() => {
-                    if (this.stompClient && this.stompClient.connected) {
-                        clearInterval(interval);
-                        resolve();
-                    }
-                }, 500);
-            }
-        });
-    }
+
     // đăng kí nhận bình luận cho trả lời bình luận
     subscribeRepliesToDoctor(reviewId: number) {
         // if (this.replySubscription) {
         //     this.replySubscription?.unsubscribe(); 
         // }
-        if (this.subscribedReplies.has(reviewId)) {
+        if (this.replySubscriptions.has(reviewId)) {
+            // Đã đăng ký rồi
             return;
         }
+
         const channel = `/topic/replies/${reviewId}`;
         console.log(`Đăng ký nhận replies từ WebSocket: ${channel}`);
-        this.replySubscription = this.stompClient.subscribe(channel, message => {
+
+        const subscription = this.stompClient.subscribe(channel, message => {
             const newReply: reviewReplies = JSON.parse(message.body);
-            console.log("Giá trị nhận được từ server là: " + newReply)
+            console.log("Giá trị nhận được từ server là:", newReply);
             this.replySubject.next(newReply);
         });
-        // Đánh dấu reviewId đã được đăng ký
-        this.subscribedReplies.add(reviewId);
+
+        // Lưu lại subscription để tránh trùng
+        this.replySubscriptions.set(reviewId, subscription);
     }
     sendReview(review: reviewModel): Observable<any> {
         const token = localStorage.getItem('accessToken');
@@ -157,10 +136,10 @@ export class WebSocketService {
                 }
             });
 
-            // Lắng nghe phản hồi từ server trên `/topic/reviewer/{userId}` để xem thành công hay không và hiển thị thông báo cho người dùng
+            // Lắng nghe phản hồi từ server trên `/topic/reviewer/{userId}` để xem thành công hay không và hiển thị thông báo cho người dùng, tức là đăng kí lắng nghe phản hồi ngay tại đây
             const subscription = this.stompClient.subscribe(`/topic/reviewer/${review.appointment?.appointmentId}`, (message) => {
                 const response = JSON.parse(message.body);
-                console.log("📌 Nhận phản hồi từ WebSocket:", response);
+                console.log(" Nhận phản hồi từ WebSocket:", response);
                 observer.next(response);  // Trả về dữ liệu nhận được
                 observer.complete();  // Kết thúc observable
             });
@@ -169,12 +148,52 @@ export class WebSocketService {
             return () => subscription.unsubscribe();
         });
     }
+    // hàm update review
+    updateReview(review: reviewModel): Observable<any> {
+        const token = localStorage.getItem('accessToken');
+        const refreshToken = localStorage.getItem('refreshToken');
+        console.log("frontend gọi sửa review");
+        return new Observable(observer => {
+            try {
+                console.log("trước khi gọi");
+                if (this.stompClient && this.stompClient.connected) {
+                    this.stompClient.publish({
+                        destination: '/app/user/review/update',
+                        body: JSON.stringify(review),
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        }
+                    });
+                    console.log("gọi sửa review thành công");
+
+                    // const subscription = this.stompClient.subscribe(`/topic/reviewer/${review.appointment?.appointmentId}`, (message) => {
+                    //     const response = JSON.parse(message.body);
+                    //     console.log(" Nhận phản hồi từ WebSocket:", response);
+                    //     observer.next(response);  // Trả về dữ liệu nhận được
+                    //     observer.complete();  // Kết thúc observable
+                    // });
+
+                    // return () => subscription.unsubscribe(); // ✅ hợp lệ
+                    return
+                } else {
+                    console.warn("WebSocket chưa kết nối!");
+                    observer.error("WebSocket chưa kết nối!");
+                    return; // ✅ thêm return ở đây
+                }
+            } catch (error) {
+                console.error("Lỗi khi gửi review:", error);
+                observer.error(error);
+                return; // ✅ thêm return ở đây
+            }
+        });
+    }
+
     // hàm thêm reviewReplies
     sendReviewReplies(reviewReplies: reviewReplies) {
         const token = localStorage.getItem('accessToken');
         console.log("fontend gọi thêm reviewreplies")
         console.log("Dữ liệu gửi đi:", JSON.stringify(reviewReplies));
-        console.log("📩 Đang gửi tin nhắn đến:", this.stompClient);
+        console.log("Đang gửi tin nhắn đến:", this.stompClient);
 
         return new Observable(observe => {
             this.stompClient.publish({
@@ -187,6 +206,47 @@ export class WebSocketService {
             observe.next();  // Thông báo đã gửi xong
             observe.complete();  // Kết thúc Observable
         }).subscribe();
+    }
+
+
+    getReview(): Observable<reviewModel> {
+        return this.reviewSubject.asObservable().pipe(filter(review => review !== null)) as Observable<reviewModel>;
+    }
+    getReplies(): Observable<reviewReplies> {
+        console.log(" gọi tới get replies")
+        return this.replySubject.asObservable().pipe(filter(review => review !== null)) as Observable<reviewReplies>;
+    }
+    disconnect() {
+        if (this.stompClient) {
+            this.stompClient.deactivate();
+        }
+    }
+
+
+    private retryPendingMessages(token: string) {
+        while (this.pendingMessages.length > 0) {
+            const review = this.pendingMessages.shift();
+            this.sendReview(review); // Gửi lại yêu cầu bị chặn
+        }
+    }
+    private refreshTokenAndRetry(): Observable<boolean> {
+        return this.auth.refreshToken().pipe(
+            tap((response) => {
+                if (response && response.accessToken) {
+                    console.log("Token mới đã được lấy");
+                    localStorage.setItem('accessToken', response.accessToken);
+                    localStorage.setItem('Authorization-Refresh', response.refreshToken)
+                    this.retryPendingMessages(response.accessToken); // Gửi lại các tin nhắn chờ
+                } else {
+                    console.error("Không thể làm mới token: Response không hợp lệ");
+                }
+            }),
+            map(response => !!response && !!response.accessToken), // Trả về true nếu refresh thành công
+            catchError((error) => {
+                console.error("Không thể làm mới token:", error);
+                return of(false);
+            })
+        );
     }
     // đăng kí lắng nghe phản hồi từ server để xử lý
     async listenStatusOfToekn() {
@@ -214,19 +274,6 @@ export class WebSocketService {
                 this.refreshTokenAndRetry();
             }
         });
-    }
-
-    getReview(): Observable<reviewModel> {
-        return this.reviewSubject.asObservable().pipe(filter(review => review !== null)) as Observable<reviewModel>;
-    }
-    getReplies(): Observable<reviewReplies> {
-        console.log(" gọi tới get replies")
-        return this.replySubject.asObservable().pipe(filter(review => review !== null)) as Observable<reviewReplies>;
-    }
-    disconnect() {
-        if (this.stompClient) {
-            this.stompClient.deactivate();
-        }
     }
 }
 

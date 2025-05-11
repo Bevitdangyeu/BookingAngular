@@ -57,3 +57,19 @@
     color:rgb(137, 215, 137);
     font-weight: bolder;
 }
+.reply-box{
+    margin-top: 20px;
+}
+.input-readonly{
+    outline: none;
+    margin-left: 10px;
+    width: 400px;
+}
+.input-editable{
+    padding: 5px 10px 5px 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    outline: 1px solid #aeb6bf;
+    width: 400px;
+}
