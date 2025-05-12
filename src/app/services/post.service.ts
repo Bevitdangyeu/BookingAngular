@@ -24,8 +24,8 @@ export class PostService {
     getPostById(id: number): Observable<{ message: string; post: PostModel }> {
         return this.http.get<{ message: string; post: PostModel }>(this.apiUrl + `public/post/${id}`);
     }
-    filterByCategoryAndTime(categoryId: number, date: string, page: number): Observable<PagebleModel> {
-        return this.http.get<PagebleModel>(this.apiUrl + `doctor/post/${categoryId}/${date}/${page}`);
+    filterByCategoryAndTime(categoryId: number, month: string, page: number): Observable<PagebleModel> {
+        return this.http.get<PagebleModel>(this.apiUrl + `doctor/post/${categoryId}/${month}/${page}`);
     }
     findByTopic(id: number, page: number) {
         return this.http.get<PagebleModel>(this.apiUrl + `public/post/category/${id}/${page}`)

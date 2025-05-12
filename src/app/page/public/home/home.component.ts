@@ -105,4 +105,7 @@ export class HomeComponent implements OnInit {
       this.groupedPost.push(this.post.slice(i, i + 3))
     }
   }
+  findByExpertise(expertise: String) {
+    this.router.navigate(['public/doctor', expertise]);
+  }
 }

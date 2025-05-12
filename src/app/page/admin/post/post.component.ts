@@ -318,6 +318,10 @@ export class PostComponent {
   filterByCategoryAndDate() {
     // lấy  dữ liệu từ bên giao diện
     const categoryId = this.selectedCategoryId;
+    const today = new Date();
+    //const time = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0');
+    const time = this.time;
+    console.log(time);
     const date = this.time;
     this.postService.filterByCategoryAndTime(categoryId, date, this.currentPage).subscribe({
       next: (data) => {

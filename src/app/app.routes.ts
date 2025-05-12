@@ -18,6 +18,7 @@ import { TimeComponent } from './page/admin/time/time.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { RegisterDoctorComponent } from './auth/register-doctor/register-doctor.component';
 import { StatisticalComponent } from './page/admin/statistical/statistical.component';
+import { DoctorComponent } from './page/public/doctor/doctor.component';
 export const routes: Routes = [
     {
         path: 'public',
@@ -32,8 +33,8 @@ export const routes: Routes = [
             { path: 'appointment/list', component: AppointmentComponent },
             { path: 'post/:id', component: PublicPostComponent },
             { path: 'topic/:id', component: TopicComponent },
-            { path: 'search/post/:key', component: SearchComponent }
-
+            { path: 'search/post/:key', component: SearchComponent },
+            { path: 'doctor/:expertise', component: DoctorComponent }
             // lazy loading  chỉ tải profile component khi người dùng truy cập vào /profile
         ],
     },
