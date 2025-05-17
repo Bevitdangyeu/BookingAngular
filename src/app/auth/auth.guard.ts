@@ -10,7 +10,7 @@ import { Observer } from "rxjs";
 export class AuthGuard implements CanActivate {
     constructor(private authService: AuthServiceComponent, private router: Router) { }
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): MaybeAsync<GuardResult> {
-        const expectedRole = route.data['expectedRole'];// role yêu cầu từ route
+        const expectedRole = route.data['expectedRole'];// role yêu cầu từ route.ts của đường dẫn đó
         const userRole = this.authService.getUserRole();// lấy role từ token
         console.log("Quyền" + userRole)
         if (userRole && expectedRole.includes(userRole)) {

@@ -1,0 +1,37 @@
+<div style="min-height: 700px;" class="container mt-4">
+  <h2 style="text-align: center;" class="mb-4">Danh sách bác sĩ</h2>
+  <table class="table table-hover table-bordered shadow rounded">
+    <thead class="table" style="background-color: rgb(176, 191, 217);">
+      <tr>
+        <th>ID</th>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Expertise</th>
+        <th>Asdress</th>
+        <th>Acctive</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of doctors">
+        <td>{{ user.userDTO.idUser }}</td>
+        <td><img class="img" [src]="'http://localhost:8080/uploads/'+user.userDTO.image"></td>
+        <td>{{ user.userDTO.fullName }}</td>
+        <td>{{ user.expertise }}</td>
+        <td>{{ user.userDTO.address }}</td>
+        <td><i *ngIf="user.userDTO.active===true" class="fa-solid fa-check"></i>
+          <i *ngIf="user.userDTO.active===false" class="fa-solid fa-x"></i></td>
+        <td>
+          <button *ngIf="user.userDTO.active===true" class="buttonLock" (click)="lockAccount(user.userDTO.idUser??0)"><i
+              class="fa-solid fa-lock"></i></button>
+          <button *ngIf="user.userDTO.active===false" class="buttonLock"
+            (click)="lockAccount(user.userDTO.idUser??0)"><i class="fa-solid fa-lock-open"></i></button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="doctors.length === 0" class="alert alert-info">
+    Không có người dùng nào.
+  </div>
+</div>

@@ -30,9 +30,36 @@ export class RegisterComponent {
       email: ['', [Validators.required, Validators.email]],
       fullName: ['', Validators.required],
       username: ['', Validators.required],
-      password: ['', Validators.required]
-    });
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required],
+    },
+      {
+        validators: this.passwordMatchValidator,
+      }
+    );
   }
+  passwordMatchValidator(form: FormGroup) {
+    const password = form.get('password')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+
+    if (password !== confirmPassword) {
+      form.get('confirmPassword')?.setErrors({ passwordMismatch: true });
+    } else {
+      // chỉ clear lỗi nếu không còn lỗi nào khác
+      const errors = form.get('confirmPassword')?.errors;
+      if (errors) {
+        delete errors['passwordMismatch'];
+        if (Object.keys(errors).length === 0) {
+          form.get('confirmPassword')?.setErrors(null);
+        } else {
+          form.get('confirmPassword')?.setErrors(errors);
+        }
+      }
+    }
+
+    return null;
+  }
+
   onSubmit() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();

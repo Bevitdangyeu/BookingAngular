@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthServiceComponent } from '../../core/services/auth-service.component';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -19,16 +19,37 @@ export class RegisterDoctorComponent {
   loginForm: FormGroup;
   isLoading = false;
   constructor(private fb: FormBuilder, private authService: AuthServiceComponent, private router: Router, private doctorService: DoctorService) {
-    this.loginForm = this.fb.group({ // hàm group giúp kiểm tra và định dạng dữ liệu đầu vào 
+    this.loginForm = this.fb.group({
       username: ['', Validators.required],
-      password: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required],
       fullName: ['', Validators.required],
       expertise: [''],
       experience: [''],
       hospital: [''],
       phoneNumber: [''],
       address: ['']
-    });
+    }, { validators: this.passwordMatchValidator });
+  }
+  passwordMatchValidator(form: AbstractControl) {
+    const password = form.get('password')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+
+    if (password !== confirmPassword) {
+      form.get('confirmPassword')?.setErrors({ passwordMismatch: true });
+    } else {
+      // Nếu confirmPassword có lỗi passwordMismatch thì xóa lỗi đó đi
+      const errors = form.get('confirmPassword')?.errors;
+      if (errors) {
+        delete errors['passwordMismatch'];
+        if (Object.keys(errors).length === 0) {
+          form.get('confirmPassword')?.setErrors(null);
+        } else {
+          form.get('confirmPassword')?.setErrors(errors);
+        }
+      }
+    }
+    return null;
   }
   onSubmit() {
     if (this.loginForm.valid) {

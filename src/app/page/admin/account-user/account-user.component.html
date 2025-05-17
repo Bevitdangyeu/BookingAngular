@@ -1,0 +1,37 @@
+<div style="min-height: 700px;" class="container mt-4">
+  <h2 style="text-align: center;" class="mb-4">Danh sách khách hàng</h2>
+  <table class="table table-hover table-bordered shadow rounded">
+    <thead class="table" style="background-color: rgb(176, 191, 217);">
+      <tr>
+        <th>ID</th>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Asdress</th>
+        <th>Acctive</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.idUser }}</td>
+        <td><img class="img" [src]="'http://localhost:8080/uploads/'+user.image"></td>
+        <td>{{ user.fullName }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.address }}</td>
+        <td><i *ngIf="user.active===true" class="fa-solid fa-check"></i>
+          <i *ngIf="user.active===false" class="fa-solid fa-x"></i></td>
+        <td>
+          <button *ngIf="user.active===true" class="buttonLock" (click)="lockAccount(user.idUser??0)"><i
+              class="fa-solid fa-lock"></i></button>
+          <button *ngIf="user.active===false" class="buttonLock" (click)="lockAccount(user.idUser??0)"><i
+              class="fa-solid fa-lock-open"></i></button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="users.length === 0" class="alert alert-info">
+    Không có người dùng nào.
+  </div>
+</div>

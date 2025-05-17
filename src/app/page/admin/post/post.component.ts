@@ -108,7 +108,6 @@ export class PostComponent {
               text: 'Thêm/cập nhật bài viết thành công!',
               icon: 'success',
               confirmButtonText: 'OK',
-              timer: 3000,
               timerProgressBar: true,
               customClass: {
                 popup: 'custom-popup-logout',
@@ -143,7 +142,6 @@ export class PostComponent {
           text: 'Thêm/cập nhật bài viết thất bại, vui lòng thử lại!',
           icon: 'error',
           confirmButtonText: 'OK',
-          timer: 3000,
           timerProgressBar: true,
           customClass: {
             popup: 'custom-popup-logout',
@@ -289,7 +287,6 @@ export class PostComponent {
                 text: 'Xóa bài viết thành công!',
                 icon: 'success',
                 confirmButtonText: 'OK',
-                timer: 3000,
                 timerProgressBar: true,
                 customClass: {
                   popup: 'custom-popup-logout',
@@ -302,7 +299,6 @@ export class PostComponent {
               text: 'Xóa bài viết thất bại, vui lòng thử lại!',
               icon: 'error',
               confirmButtonText: 'OK',
-              timer: 3000,
               timerProgressBar: true,
               customClass: {
                 popup: 'custom-popup-logout',

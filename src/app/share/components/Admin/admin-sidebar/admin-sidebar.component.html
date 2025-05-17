@@ -14,7 +14,7 @@
       <li class="nav-item mt-3">
         <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">MANAGE</h6>
       </li>
-      <li class="nav-item menu">
+      <li *ngIf="getRole()==='DOCTOR'" class="nav-item menu">
         <a [routerLink]="'/admin/home'" class="nav-link">
           <div
             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -23,7 +23,7 @@
           <span class="nav-link-text ms-1">HOME</span>
         </a>
       </li>
-      <li class="nav-item menu">
+      <li *ngIf="getRole()==='DOCTOR'" class="nav-item menu">
         <a [routerLink]="'/admin/post'" class="nav-link ">
           <div
             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -32,7 +32,7 @@
           <span class="nav-link-text ms-1">POST</span>
         </a>
       </li>
-      <li class="nav-item menu">
+      <li *ngIf="getRole()==='DOCTOR'" class="nav-item menu">
         <a [routerLink]="'/admin/appointment'" class="nav-link ">
           <div
             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -41,7 +41,7 @@
           <span class="nav-link-text ms-1">APPOINTMENT</span>
         </a>
       </li>
-      <li class="nav-item">
+      <li *ngIf="getRole()==='DOCTOR'" class="nav-item">
         <a class="nav-link" (click)="showClick()">
           <div
             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -64,7 +64,7 @@
           </ul>
         </div>
       </li>
-      <li class="nav-item menu">
+      <li *ngIf="getRole()==='DOCTOR'" class="nav-item menu">
         <a [routerLink]="'/admin/statistical'" class="nav-link ">
           <div
             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -72,6 +72,29 @@
           </div>
           <span class="nav-link-text ms-1">STATISTICAL</span>
         </a>
+      </li>
+      <li *ngIf="getRole()==='ADMIN'" class="nav-item menu">
+        <a class="nav-link" (click)="showClick()">
+          <div
+            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+            <i class="ni ni-calendar-grid-58 text-dark text-sm opacity-10"></i>
+          </div>
+          <span class="nav-link-text ms-1">ACCOUNT</span>
+        </a>
+        <div class="nav-link-text ms-1" *ngIf="isShowed===true">
+          <ul class="navbar-nav" style="margin-left: 40px;">
+            <li class="nav-item menu">
+              <a [routerLink]="'/admin/doctor'" class="nav-link">
+                <span class="nav-link-text ms-1" style="color: 99B7BB;">DOCTOR</span>
+              </a>
+            </li>
+            <li class="nav-item menu">
+              <a [routerLink]="'/admin/user'" class="nav-link">
+                <span class="nav-link-text ms-1">USER</span>
+              </a>
+            </li>
+          </ul>
+        </div>
       </li>
       <li class="nav-item mt-3">
         <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account pages</h6>

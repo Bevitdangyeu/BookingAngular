@@ -15,6 +15,8 @@ import { Router } from '@angular/router';
 export class DoctorComponent {
   doctors: DoctorModel[] = [];
   groupedDoctors: DoctorModel[][] = [];
+  //route: ActivatedRoute dùng để lấy tham số trên url
+  // private router: Router dùng để chuyển hướng trang
   constructor(private route: ActivatedRoute, private doctorService: DoctorService, private router: Router) { }
   ngOnInit(): void {
     this.loadDoctors();

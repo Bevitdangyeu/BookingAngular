@@ -237,7 +237,6 @@ export class ProfileComponent {
           text: 'Chúc mừng bạn đã đặt lịch hẹn thành công! Vui lòng theo dõi trạng thái tại đây',
           icon: 'success',
           confirmButtonText: 'OK',
-          timer: 3000,
           timerProgressBar: true,
           customClass: {
             popup: 'custom-popup-logout',
@@ -257,7 +256,6 @@ export class ProfileComponent {
           text: 'Đặt lịch hẹn không thành công, vui lòng thử lại',
           icon: 'error',
           confirmButtonText: 'OK',
-          timer: 3000,
           timerProgressBar: true,
           customClass: {
             popup: 'custom-popup-logout',
@@ -294,6 +292,30 @@ export class ProfileComponent {
     });
   }
   showReplyBox(reviewId: number, status: number) {
+    const currentUserId = this.getUserId();
+    if (currentUserId === 0) {
+      const returnUrl = this.router.url;
+      sessionStorage.setItem('returnUrl', returnUrl);
+      Swal.fire({
+        title: 'Lỗi!',
+        text: 'Bạn chưa đăng nhập! Vui lòng đăng nhập',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Đăng nhập',
+        cancelButtonText: 'Hủy',
+        customClass: {
+          popup: 'custom-popup-logout',
+          title: 'custom-title-logout'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.router.navigate(['/login']);
+        }
+        // Nếu là Hủy (result.isDismissed), không cần làm gì thêm
+      });
+
+      return;
+    }
     console.log('replyVisibility:', this.replyVisibility);
     if (status == 1) {
       this.replyVisibility[reviewId] = true;

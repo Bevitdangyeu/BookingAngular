@@ -6,7 +6,8 @@ export interface userModel {
     role?: string;
     fileName?: string;
     username: string;
-    password: string;
+    password?: string;
     coverPhoto?: string;
     address?: string;
+    active?: boolean;
 }

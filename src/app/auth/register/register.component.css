@@ -37,7 +37,7 @@ body {
     height: 40px;
     border-radius:20px;
     padding-left: 10px;
-    margin-top: 20px;
+    margin-top: 5px;
     outline: none;
     border: 1px dashed #abb2b9;
     padding: 20px;
@@ -54,4 +54,9 @@ body {
     color: #7b7b7b;
     margin-top: 20px;
     display: block;
+}
+.error-msg {
+  font-size: 12px;
+  color: gray;
+  min-height: 12px; /* giữ chỗ cho thông báo lỗi */
 }

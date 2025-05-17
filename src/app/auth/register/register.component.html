@@ -14,31 +14,68 @@
     <div class="login">
       <h2>Register</h2>
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Email -->
         <input class="input" type="email" formControlName="email" placeholder="Nhập email" />
+        <div class="error-msg">
+          <span
+            *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.touched || loginForm.get('email')?.dirty)">
+            Email không hợp lệ hoặc không được để trống!
+          </span>
+        </div>
 
+        <!-- Full Name -->
         <input class="input" type="text" formControlName="fullName" placeholder="Nhập họ tên" />
-        <span *ngIf="loginForm.get('fullName')?.invalid && loginForm.get('fullName')?.touched" class="span">
-          Họ tên không được để trống!
-        </span>
+        <div class="error-msg">
+          <span
+            *ngIf="loginForm.get('fullName')?.invalid && (loginForm.get('fullName')?.touched || loginForm.get('fullName')?.dirty)">
+            Họ tên không được để trống!
+          </span>
+        </div>
 
+        <!-- Username -->
         <input class="input" type="text" formControlName="username" placeholder="Username" />
-        <span *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="span">
-          Tên đăng nhập không được để trống!
-        </span>
+        <div class="error-msg">
+          <span
+            *ngIf="loginForm.get('username')?.invalid && (loginForm.get('username')?.touched || loginForm.get('username')?.dirty)">
+            Tên đăng nhập không được để trống!
+          </span>
+        </div>
 
-        <input class="input" type="password" formControlName="password" placeholder="Password" />
-        <span *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="span">
-          Mật khẩu không được để trống!
-        </span>
+        <!-- Password -->
+        <input type="password" class="input" formControlName="password" placeholder="Password" />
+        <div class="error-msg">
+          <span
+            *ngIf="loginForm.get('password')?.errors?.['required'] && (loginForm.get('password')?.touched || loginForm.get('password')?.dirty)">
+            Mật khẩu không được để trống
+          </span>
+          <span
+            *ngIf="loginForm.get('password')?.errors?.['minlength'] && (loginForm.get('password')?.touched || loginForm.get('password')?.dirty)">
+            Mật khẩu phải có ít nhất 6 ký tự
+          </span>
+        </div>
+
+        <!-- Confirm Password -->
+        <input type="password" class="input" formControlName="confirmPassword" placeholder="Confirm Password" />
+        <div class="error-msg">
+          <span
+            *ngIf="loginForm.get('confirmPassword')?.errors?.['required'] && (loginForm.get('confirmPassword')?.touched || loginForm.get('confirmPassword')?.dirty)">
+            Nhập lại mật khẩu không được để trống
+          </span>
+          <span *ngIf="loginForm.get('confirmPassword')?.errors?.['passwordMismatch'] 
+                    && (loginForm.get('confirmPassword')?.touched || loginForm.get('confirmPassword')?.dirty) 
+                    && !loginForm.get('confirmPassword')?.errors?.['required']">
+            Mật khẩu không khớp
+          </span>
+        </div>
 
         <button class="button" type="submit">
           {{ isLoading ? 'Đang đăng kí...' : 'Đăng kí' }}
         </button>
         <div style="margin-top: 20px;">
-          <Span>Bạn là bác sĩ?</Span> <a [routerLink]="['/register/doctor']" class="nav-link"> Đăng kí ngay</a>
+          <span>Bạn là bác sĩ?</span>
+          <a [routerLink]="['/register/doctor']" class="nav-link">Đăng kí ngay</a>
         </div>
       </form>
-
     </div>
   </div>
 </body>

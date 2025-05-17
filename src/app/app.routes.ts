@@ -19,6 +19,8 @@ import { RegisterComponent } from './auth/register/register.component';
 import { RegisterDoctorComponent } from './auth/register-doctor/register-doctor.component';
 import { StatisticalComponent } from './page/admin/statistical/statistical.component';
 import { DoctorComponent } from './page/public/doctor/doctor.component';
+import { AccountDoctorComponent } from './page/admin/account-doctor/account-doctor.component';
+import { AccountUserComponent } from './page/admin/account-user/account-user.component';
 export const routes: Routes = [
     {
         path: 'public',
@@ -47,9 +49,11 @@ export const routes: Routes = [
             { path: 'appointment', component: AdminAppointmentComponent },
             { path: 'profile', component: DoctorProfile },
             { path: 'time', component: TimeComponent },
-            { path: 'statistical', component: StatisticalComponent }
+            { path: 'statistical', component: StatisticalComponent },
+            { path: 'user', component: AccountUserComponent },
+            { path: 'doctor', component: AccountDoctorComponent },
         ],
-        canActivate: [AuthGuard], data: { expectedRole: ['DOCTOR'] }
+        canActivate: [AuthGuard], data: { expectedRole: ['DOCTOR', 'ADMIN'] }
     },
     {
         path: 'user', // url với đường dẫn admin sẽ áp dụng layout admin

@@ -4,12 +4,24 @@
 <head>
   <title>Register Page</title>
   <link rel="stylesheet" th:href="@{/css/Login.css}">
+  <style>
+    .error-msg {
+      font-size: 12px;
+      color: grey;
+      display: block;
+      /* cho lỗi chiếm 1 dòng */
+      min-height: 16px;
+      /* giữ chỗ để tránh nhảy layout */
+      margin-top: 4px;
+    }
+
+  </style>
 </head>
 
 <body>
   <div class="container">
     <div class="img">
-      <img class="doctorimg" src="/assets/public/img/loginImage.jpg" alt="">
+      <img class="doctorimg" src="/assets/public/img/loginImage.jpg" alt="Doctor Image">
     </div>
     <div class="login">
       <h2>Register</h2>
@@ -18,39 +30,95 @@
           <!-- Cột 1 -->
           <div style="flex: 1;">
             <input class="input" id="expertise" type="text" placeholder="Chuyên môn" formControlName="expertise" />
+            <span class="error-msg">
+              <ng-container
+                *ngIf="loginForm.get('expertise')?.invalid && (loginForm.get('expertise')?.touched || loginForm.get('expertise')?.dirty)">
+                Chuyên môn không hợp lệ!
+              </ng-container>
+            </span>
 
             <input class="input" id="experience" type="number" placeholder="Kinh nghiệm (năm)"
               formControlName="experience" />
-
-            <input class="input" id="hospital" type="text" placeholder="Bệnh viện" formControlName="hospital" />
-            <input class="input" id="fullName" type="text" placeholder="Họ tên" formControlName="fullName" />
-            <span *ngIf="loginForm.get('fullName')?.invalid && loginForm.get('fullName')?.touched" class="span">
-              Họ tên không được để trống!
+            <span class="error-msg">
+              <ng-container
+                *ngIf="loginForm.get('experience')?.invalid && (loginForm.get('experience')?.touched || loginForm.get('experience')?.dirty)">
+                Kinh nghiệm không hợp lệ!
+              </ng-container>
             </span>
 
+            <input class="input" id="hospital" type="text" placeholder="Bệnh viện" formControlName="hospital" />
+            <span class="error-msg">
+              <ng-container
+                *ngIf="loginForm.get('hospital')?.invalid && (loginForm.get('hospital')?.touched || loginForm.get('hospital')?.dirty)">
+                Bệnh viện không hợp lệ!
+              </ng-container>
+            </span>
+
+            <input class="input" id="fullName" type="text" placeholder="Họ tên" formControlName="fullName" />
+            <span class="error-msg">
+              <ng-container
+                *ngIf="loginForm.get('fullName')?.invalid && (loginForm.get('fullName')?.touched || loginForm.get('fullName')?.dirty)">
+                Họ tên không được để trống!
+              </ng-container>
+            </span>
           </div>
 
           <!-- Cột 2 -->
           <div style="flex: 1;">
             <input class="input" id="username" type="text" placeholder="Username" formControlName="username" />
-            <span *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="span">
-              Tên đăng nhập không được để trống!
+            <span class="error-msg">
+              <ng-container
+                *ngIf="loginForm.get('username')?.invalid && (loginForm.get('username')?.touched || loginForm.get('username')?.dirty)">
+                Tên đăng nhập không được để trống!
+              </ng-container>
             </span>
 
             <input class="input" id="password" type="password" placeholder="Password" formControlName="password" />
-            <span *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="span">
-              Mật khẩu không được để trống!
+            <span class="error-msg">
+              <ng-container
+                *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.touched || loginForm.get('password')?.dirty)">
+                Mật khẩu phải có 6 ký tự!
+              </ng-container>
+            </span>
+
+            <input class="input" id="confirmPassword" type="password" placeholder="Nhập lại mật khẩu"
+              formControlName="confirmPassword" />
+            <span class="error-msg">
+              <ng-container
+                *ngIf="loginForm.get('confirmPassword')?.invalid && (loginForm.get('confirmPassword')?.touched || loginForm.get('confirmPassword')?.dirty)">
+                <ng-container *ngIf="loginForm.get('confirmPassword')?.errors?.['required']">
+                  Nhập lại mật khẩu không được để trống!
+                </ng-container>
+                <ng-container
+                  *ngIf="loginForm.get('confirmPassword')?.errors?.['passwordMismatch'] && !loginForm.get('confirmPassword')?.errors?.['required']">
+                  Mật khẩu không khớp!
+                </ng-container>
+              </ng-container>
             </span>
 
             <input class="input" id="phoneNumber" type="text" placeholder="Số điện thoại"
               formControlName="phoneNumber" />
+            <span class="error-msg">
+              <ng-container
+                *ngIf="loginForm.get('phoneNumber')?.invalid && (loginForm.get('phoneNumber')?.touched || loginForm.get('phoneNumber')?.dirty)">
+                Số điện thoại không hợp lệ!
+              </ng-container>
+            </span>
+
             <input class="input" id="address" type="text" placeholder="Địa chỉ" formControlName="address" />
+            <span class="error-msg">
+              <ng-container
+                *ngIf="loginForm.get('address')?.invalid && (loginForm.get('address')?.touched || loginForm.get('address')?.dirty)">
+                Địa chỉ không hợp lệ!
+              </ng-container>
+            </span>
           </div>
         </div>
-        <button type="submit" class="button">Đăng kí</button>
+        <button type="submit" class="button" [disabled]="isLoading">Đăng kí</button>
       </form>
     </div>
   </div>
 </body>
+
 
 </html>

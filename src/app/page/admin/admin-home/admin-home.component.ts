@@ -14,6 +14,8 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
+import { jwtDecode } from 'jwt-decode';
+import { jwtPayloadd } from '../../../services/jwtPayloadd.service';
 
 Chart.register(CategoryScale, LinearScale, BarElement, BarController, Title, Tooltip, Legend);
 @Component({
@@ -116,5 +118,20 @@ export class AdminHomeComponent {
       }
     });
   }
-
+  getRole(): String {
+    //lấy token từ localStorge
+    const token = localStorage.getItem("accessToken");
+    let role;
+    if (token) {
+      try {
+        const decode = jwtDecode<jwtPayloadd>(token);
+        role = decode.role ?? "";
+        console.log("role: " + role)
+        return role;
+      } catch (error) {
+        console.error("Không thể decode token:", error);
+      }
+    }
+    return "";
+  }
 }

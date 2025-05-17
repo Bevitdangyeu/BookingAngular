@@ -1,6 +1,6 @@
 import { Component, InjectionToken } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map, Observable, tap } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { AuthenticationResponse } from '../../models/authentication-response.model';
 import { Router } from '@angular/router';
@@ -18,7 +18,17 @@ export class AuthServiceComponent {
   constructor(private http: HttpClient, private router: Router) { }
 
   login(credentials: { username: string; password: string }): Observable<any> {
-    return this.http.post<AuthenticationResponse>(this.apiUrl, credentials);
+    return this.http.post<AuthenticationResponse>(this.apiUrl, credentials)
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          // if (error.status === 401) {
+          //   alert('Sai tên đăng nhập hoặc mật khẩu');
+          // } else {
+          //   alert('Có lỗi xảy ra. Vui lòng thử lại.');
+          // }
+          return throwError(() => error);
+        })
+      );
   }
   // refresh token
   refreshToken(): Observable<AuthenticationResponse> {

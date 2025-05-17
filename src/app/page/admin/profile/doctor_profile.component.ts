@@ -115,7 +115,6 @@ export class DoctorProfile {
           text: 'Cập nhật thông tin thành công!',
           icon: 'success',
           confirmButtonText: 'OK',
-          timer: 3000,
           timerProgressBar: true,
           customClass: {
             popup: 'custom-popup-logout',
@@ -130,7 +129,6 @@ export class DoctorProfile {
           text: 'Cập nhật thông tin thất bại!',
           icon: 'error',
           confirmButtonText: 'OK',
-          timer: 3000,
           timerProgressBar: true,
           customClass: {
             popup: 'custom-popup-logout',

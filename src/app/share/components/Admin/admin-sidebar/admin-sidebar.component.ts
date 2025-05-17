@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+import { jwtDecode } from 'jwt-decode';
+import { jwtPayloadd } from '../../../../services/jwtPayloadd.service';
 @Component({
   selector: 'app-admin-sidebar',
   imports: [RouterModule, CommonModule],
@@ -30,5 +32,20 @@ export class AdminSidebarComponent {
         title: 'custom-title-logout'
       }
     });
+  }
+  getRole(): String {
+    //lấy token từ localStorge
+    const token = localStorage.getItem("accessToken");
+    let role;
+    if (token) {
+      try {
+        const decode = jwtDecode<jwtPayloadd>(token);
+        role = decode.role ?? "";
+        return role;
+      } catch (error) {
+        console.error("Không thể decode token:", error);
+      }
+    }
+    return "";
   }
 }
